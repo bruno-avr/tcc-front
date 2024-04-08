@@ -20,7 +20,7 @@ import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import DashboardIcon from "@mui/icons-material/Dashboard";
+import GroupIcon from "@mui/icons-material/Group";
 import HomeIcon from "@mui/icons-material/Home";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -63,9 +63,6 @@ const StyledDrawer = styled(Drawer, {
         duration: theme.transitions.duration.leavingScreen,
       }),
       width: theme.spacing(7),
-      // [theme.breakpoints.up("sm")]: {
-      //   width: theme.spacing(9),
-      // },
     }),
   },
 }));
@@ -79,7 +76,7 @@ const routesData = [
   {
     title: "Professores",
     route: "/teachers",
-    Icon: DashboardIcon,
+    Icon: GroupIcon,
   },
 ];
 
@@ -120,7 +117,12 @@ export default function Layout({ children }) {
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            Dashboard
+            {
+              (
+                routesData.find((e) => e.route === location.pathname) ||
+                routesData[0]
+              ).title
+            }
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
