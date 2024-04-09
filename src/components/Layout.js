@@ -20,8 +20,11 @@ import React, { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import GroupIcon from "@mui/icons-material/Group";
+import PeopleIcon from "@mui/icons-material/People";
 import HomeIcon from "@mui/icons-material/Home";
+import SchoolIcon from "@mui/icons-material/School";
+import ClassIcon from "@mui/icons-material/Class";
+import SubjectIcon from "@mui/icons-material/Subject";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
@@ -76,7 +79,22 @@ const routesData = [
   {
     title: "Professores",
     route: "/teachers",
-    Icon: GroupIcon,
+    Icon: PeopleIcon,
+  },
+  {
+    title: "Séries",
+    route: "/grades",
+    Icon: SchoolIcon,
+  },
+  {
+    title: "Turmas",
+    route: "/classes",
+    Icon: ClassIcon,
+  },
+  {
+    title: "Disciplinas",
+    route: "/subjects",
+    Icon: SubjectIcon,
   },
 ];
 
