@@ -1,95 +1,153 @@
 import React, { useState } from "react";
-
 import {
-  Card,
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions,
-  Avatar,
-  IconButton,
-  Typography,
-  Box,
   Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const TEACHERS = [
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-  { nome: "teste" },
-];
+const TeacherTable = ({ teachers }) => {
+  const [deleteTeacher, setDeleteTeacher] = useState(null);
+  const [editTeacher, setEditTeacher] = useState(null);
+  const [editName, setEditName] = useState("");
 
-export default function Teachers() {
-  const [teachers, setTeachers] = useState(TEACHERS);
+  const handleDelete = (teacher) => {
+    setDeleteTeacher(teacher);
+  };
 
-  function getFirstLetter(str) {
-    if (!str?.length) return "";
-    return str[0].toUpperCase();
-  }
+  const handleEdit = (teacher) => {
+    setEditTeacher(teacher);
+    setEditName(teacher.name);
+  };
+
+  const handleClose = () => {
+    setDeleteTeacher(null);
+  };
+
+  const handleCloseEdit = () => {
+    setEditTeacher(null);
+    setEditName("");
+  };
+
+  const handleConfirmDelete = () => {
+    console.log("Deleting teacher:", deleteTeacher.name);
+    setDeleteTeacher(null);
+  };
+
+  const handleConfirmEdit = () => {
+    console.log("Editing teacher:", editTeacher.name, "to", editName);
+    setEditTeacher(null);
+    setEditName("");
+  };
+
+  const handleNameChange = (event) => {
+    setEditName(event.target.value);
+  };
 
   return (
-    <div>
-      <Grid container spacing={2}>
-        {teachers.map((teacher) => (
-          <Grid item xs={12} sm={6} md={4} key={teacher.nome}>
-            <Card key={teacher.nome} sx={{ maxWidth: 345 }}>
-              <CardHeader
-                avatar={<Avatar>{getFirstLetter(teacher.nome)}</Avatar>}
-                action={
-                  <IconButton aria-label="settings">
-                    <MoreVertIcon />
-                  </IconButton>
-                }
-                title={teacher.nome}
-                subheader="September 14, 2016"
-              />
-              <CardMedia
-                component="img"
-                height="194"
-                image="/static/images/cards/paella.jpg"
-                alt="Paella dish"
-              />
-              <CardContent>
-                <Typography variant="body2" color="text.secondary">
+    <>
+      <TableContainer component={Paper}>
+        <Table aria-label="teacher table">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ width: "15%" }}>Nome</TableCell>
+              <TableCell>Detalhes</TableCell>
+              <TableCell>Editar</TableCell>
+              <TableCell>Excluir</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {teachers.map((teacher) => (
+              <TableRow key={teacher.name}>
+                <TableCell>{teacher.name}</TableCell>
+                <TableCell>
                   This impressive paella is a perfect party dish and a fun meal
                   to cook together with your guests. Add 1 cup of frozen peas
                   along with the mussels, if you like.
-                </Typography>
-              </CardContent>
-              <CardActions disableSpacing>
-                <Box sx={{ ml: "auto" }}>
-                  <IconButton>
+                </TableCell>
+                <TableCell>
+                  <IconButton onClick={() => handleEdit(teacher)}>
                     <EditIcon />
                   </IconButton>
-                  <IconButton>
+                </TableCell>
+                <TableCell>
+                  <IconButton onClick={() => handleDelete(teacher)}>
                     <DeleteIcon />
                   </IconButton>
-                </Box>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Dialog open={Boolean(deleteTeacher)} onClose={handleClose}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete {deleteTeacher && deleteTeacher.name}?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={handleConfirmDelete}
+            variant="contained"
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={Boolean(editTeacher)} onClose={handleCloseEdit}>
+        <DialogTitle>Edit Teacher</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Name"
+            fullWidth
+            value={editName}
+            onChange={handleNameChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEdit}>Cancel</Button>
+          <Button
+            onClick={handleConfirmEdit}
+            variant="contained"
+            color="primary"
+          >
+            Save Changes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+};
+
+export default function Teachers() {
+  const teachers = [
+    { name: "Teacher 1" },
+    { name: "Teacher 2" },
+    { name: "Teacher 3" },
+  ];
+
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <TeacherTable teachers={teachers} />
       </Grid>
-    </div>
+    </Grid>
   );
 }
