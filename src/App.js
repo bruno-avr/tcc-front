@@ -10,19 +10,22 @@ import Layout from "./components/Layout";
 import Grades from "./pages/Grades";
 import Classes from "./pages/Classes";
 import Subjects from "./pages/Subjects";
+import AppContextProvider from "./context/AppContext";
 
 function App() {
   return (
     <Router>
-      <Layout>
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/teachers" element={<Teachers />} />
-          <Route exact path="/grades" element={<Grades />} />
-          <Route exact path="/classes" element={<Classes />} />
-          <Route exact path="/subjects" element={<Subjects />} />
-        </Routes>
-      </Layout>
+      <AppContextProvider>
+        <Layout>
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route exact path="/teachers" element={<Teachers />} />
+            <Route exact path="/grades" element={<Grades />} />
+            <Route exact path="/classes" element={<Classes />} />
+            <Route exact path="/subjects" element={<Subjects />} />
+          </Routes>
+        </Layout>
+      </AppContextProvider>
     </Router>
   );
 }

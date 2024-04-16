@@ -1,6 +1,5 @@
 import {
   AppBar,
-  Badge,
   Box,
   Container,
   CssBaseline,
@@ -16,16 +15,20 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import PeopleIcon from "@mui/icons-material/People";
 import HomeIcon from "@mui/icons-material/Home";
 import SchoolIcon from "@mui/icons-material/School";
 import ClassIcon from "@mui/icons-material/Class";
 import SubjectIcon from "@mui/icons-material/Subject";
+import AddIcon from "@mui/icons-material/Add";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
+import { AppContext } from "../context/AppContext";
 
 const drawerWidth = 240;
 
@@ -99,6 +102,7 @@ const routesData = [
 ];
 
 export default function Layout({ children }) {
+  const { openAddModal } = useContext(AppContext);
   const [open, setOpen] = useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -142,10 +146,8 @@ export default function Layout({ children }) {
               ).title
             }
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
+          <IconButton color="inherit" onClick={openAddModal}>
+            <AddIcon />
           </IconButton>
         </Toolbar>
       </StyledAppBar>
@@ -206,6 +208,13 @@ export default function Layout({ children }) {
           {children}
         </Container>
       </Box>
+      <ToastContainer
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+        autoClose={4000}
+        newestOnTop
+        style={{ marginTop: 56 }}
+      />
     </Box>
   );
 }
