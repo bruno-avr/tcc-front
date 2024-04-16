@@ -83,21 +83,25 @@ const routesData = [
     title: "Professores",
     route: "/teachers",
     Icon: PeopleIcon,
+    hasAddButton: true,
   },
   {
     title: "Séries",
     route: "/grades",
     Icon: SchoolIcon,
+    hasAddButton: true,
   },
   {
     title: "Turmas",
     route: "/classes",
     Icon: ClassIcon,
+    hasAddButton: true,
   },
   {
     title: "Disciplinas",
     route: "/subjects",
     Icon: SubjectIcon,
+    hasAddButton: true,
   },
 ];
 
@@ -146,9 +150,12 @@ export default function Layout({ children }) {
               ).title
             }
           </Typography>
-          <IconButton color="inherit" onClick={openAddModal}>
-            <AddIcon />
-          </IconButton>
+          {routesData.find((e) => e.route === location.pathname)
+            ?.hasAddButton && (
+            <IconButton color="inherit" onClick={openAddModal}>
+              <AddIcon />
+            </IconButton>
+          )}
         </Toolbar>
       </StyledAppBar>
 
@@ -187,7 +194,6 @@ export default function Layout({ children }) {
               />
             </ListItemButton>
           ))}
-          {/* <Divider sx={{ my: 1 }} /> */}
         </List>
       </StyledDrawer>
 

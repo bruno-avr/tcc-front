@@ -21,6 +21,10 @@ class Requester {
     return this.awaitResponse(this.requester.put(url, data));
   }
 
+  patch(url, data) {
+    return this.awaitResponse(this.requester.patch(url, data));
+  }
+
   get(url, params = {}) {
     return this.awaitResponse(this.requester.get(url, { params }));
   }

@@ -22,4 +22,10 @@ export default class GradeAPI {
     if (response.status === 201) return response.data;
     throw new Error(response.data.errors);
   }
+
+  async editGrade(id, name) {
+    const response = await this.requester.patch("/grade/" + id, { name });
+    if (response.status === 200) return response.data;
+    throw new Error(response.data.errors);
+  }
 }
