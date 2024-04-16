@@ -28,7 +28,6 @@ export default function Grades() {
       const gradeApi = new GradeAPI(requester);
       const response = await gradeApi.getGrades();
       setGrades(response);
-      return response;
     } catch (error) {
       toast.error(error.message);
     }
@@ -47,7 +46,7 @@ export default function Grades() {
     <Grid container spacing={3}>
       {grades.map((grade) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={grade.id}>
-          <Card on>
+          <Card>
             <CardContent>
               <Typography variant="h5" component="div">
                 {grade.name}
