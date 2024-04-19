@@ -63,7 +63,7 @@ export default function Classes() {
           </Card>
         </Grid>
       ))}
-      <AddModal getData={getData} />
+      <AddModal getData={getData} classes={classes} />
       <ViewModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
@@ -75,6 +75,7 @@ export default function Classes() {
         setModalOpen={setModalOpen}
         selectedClass={selectedClass}
         getData={getData}
+        classes={classes}
       />
     </Grid>
   );

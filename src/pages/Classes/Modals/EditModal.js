@@ -19,6 +19,7 @@ export default function EditModal({
   setModalOpen,
   selectedClass,
   getData,
+  classes,
 }) {
   const [newClass, setNewClass] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -51,6 +52,7 @@ export default function EditModal({
           selectedClass={selectedClass}
           isOpen={modalOpen === "edit"}
           setNewClass={setNewClass}
+          classes={classes}
         />
       </DialogContent>
       <DialogActions>

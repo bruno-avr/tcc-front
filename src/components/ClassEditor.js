@@ -17,8 +17,10 @@ import {
   Divider,
   Paper,
   Tooltip,
+  IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import AddIcon from "@mui/icons-material/Add";
 import LibraryAddIcon from "@mui/icons-material/KeyboardTab";
 import requester from "../services/Requester/Requester";
@@ -34,9 +36,15 @@ import WaitLoading from "./WaitLoading";
 
 const minutesInADay = 1440;
 
-export default function ClassEditor({ selectedClass, isOpen, setNewClass }) {
+export default function ClassEditor({
+  selectedClass,
+  isOpen,
+  setNewClass,
+  classes,
+}) {
   const [loading, setLoading] = useState(false);
   const [addTimeModalOpen, setAddTimeModalOpen] = useState(false);
+  const [copyModalOpen, setCopyModalOpen] = useState(false);
   const [selectedGrade, setSelectedGrade] = useState("");
   const [section, setSection] = useState(null);
   const [grades, setGrades] = useState([]);
@@ -75,6 +83,10 @@ export default function ClassEditor({ selectedClass, isOpen, setNewClass }) {
 
   const closeAddTimeModal = () => {
     setAddTimeModalOpen(false);
+  };
+
+  const closeCopyModal = () => {
+    setCopyModalOpen(false);
   };
 
   function getClassName() {
@@ -132,6 +144,14 @@ export default function ClassEditor({ selectedClass, isOpen, setNewClass }) {
     setAddTimeModalOpen(true);
     setCurrWeekDay(weekDay);
     setCurrTimeSlots(timeSlots);
+  }
+
+  function copyTimeSlots(_class) {
+    setAvailableTimeSlots([...(_class?.availableTimeSlots || [])]);
+    toast.success(
+      `Horários copiados da turma: ${_class?.grade?.name} - ${_class?.section}`
+    );
+    closeCopyModal();
   }
 
   const Time = ({ time, timeSlots, weekDay }) => (
@@ -197,7 +217,7 @@ export default function ClassEditor({ selectedClass, isOpen, setNewClass }) {
             <Grid item xs={6}>
               <TextField
                 type="number"
-                label="Hora"
+                label="Horas"
                 value={hours}
                 onChange={(e) => {
                   setHours(parseInt(e.target.value));
@@ -234,6 +254,31 @@ export default function ClassEditor({ selectedClass, isOpen, setNewClass }) {
       </Dialog>
     );
   };
+
+  const CopyModal = () => (
+    <Dialog open={copyModalOpen} onClose={closeCopyModal}>
+      <DialogTitle>Copiar horários de uma turma</DialogTitle>
+      <DialogContent>
+        <Grid container spacing={2} sx={{ mt: 1 }}>
+          {classes.map((_class, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <Button
+                onClick={() => copyTimeSlots(_class)}
+                fullWidth
+                startIcon={<ContentCopyIcon />}
+                color="inherit"
+              >
+                {`${_class.grade.name} - ${_class.section}`}
+              </Button>
+            </Grid>
+          ))}
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={closeCopyModal}>Cancelar</Button>
+      </DialogActions>
+    </Dialog>
+  );
 
   return (
     <WaitLoading loading={loading}>
@@ -281,6 +326,36 @@ export default function ClassEditor({ selectedClass, isOpen, setNewClass }) {
           />
         </Grid>
       </Grid>
+
+      <Divider sx={{ my: 2 }} />
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        position="relative"
+      >
+        <Typography textAlign="center" variant="h5" component="div">
+          Horários disponíveis
+        </Typography>
+        <Box
+          sx={{
+            position: "absolute",
+            right: 0,
+            color: "inherit",
+          }}
+        >
+          <Tooltip title="Copiar horários de uma turma">
+            <IconButton
+              onClick={() => setCopyModalOpen(true)}
+              variant="contained"
+              fullWidth
+            >
+              <ContentCopyIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
+
       {numbersToWeeklySchedule(availableTimeSlots).map((timeSlots, weekDay) => (
         <Box key={weekDay}>
           <Divider sx={{ my: 2 }} />
@@ -314,6 +389,7 @@ export default function ClassEditor({ selectedClass, isOpen, setNewClass }) {
         </Box>
       ))}
       <AddTimeModal />
+      <CopyModal />
     </WaitLoading>
   );
 }

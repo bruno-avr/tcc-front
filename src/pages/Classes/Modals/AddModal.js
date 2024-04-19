@@ -15,7 +15,7 @@ import { AppContext } from "../../../context/AppContext";
 import ClassAPI from "../../../services/API/ClassAPI";
 import ClassEditor from "../../../components/ClassEditor";
 
-export default function AddModal({ getData }) {
+export default function AddModal({ getData, classes }) {
   const { isAddModalOpen, closeAddModal } = useContext(AppContext);
 
   const [loading, setLoading] = useState(false);
@@ -41,7 +41,11 @@ export default function AddModal({ getData }) {
     <Dialog open={isAddModalOpen} onClose={closeAddModal} fullWidth>
       <DialogTitle>Adicionar Turma</DialogTitle>
       <DialogContent>
-        <ClassEditor isOpen={isAddModalOpen} setNewClass={setNewClass} />
+        <ClassEditor
+          isOpen={isAddModalOpen}
+          setNewClass={setNewClass}
+          classes={classes}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={closeAddModal}>Cancelar</Button>

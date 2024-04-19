@@ -75,6 +75,10 @@ export default function ViewModal({
         <Divider />
       </DialogTitle>
       <DialogContent>
+        <Typography textAlign="center" variant="h5" component="div">
+          Horários disponíveis
+        </Typography>
+        <Divider sx={{ my: 2 }} />
         {numbersToWeeklySchedule(selectedClass.availableTimeSlots).map(
           (timeSlots, weekDay) => (
             <Box key={weekDay}>
