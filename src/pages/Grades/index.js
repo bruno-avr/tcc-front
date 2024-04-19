@@ -23,7 +23,7 @@ export default function Grades() {
   const [selectedGrade, setSelectedGrade] = useState({});
   const [modalOpen, setModalOpen] = useState(null);
 
-  async function getGrades() {
+  async function getData() {
     try {
       const gradeApi = new GradeAPI(requester);
       const response = await gradeApi.getGrades();
@@ -34,7 +34,7 @@ export default function Grades() {
   }
 
   useEffect(() => {
-    getGrades();
+    getData();
   }, []);
 
   const handleView = (grade) => {
@@ -77,16 +77,16 @@ export default function Grades() {
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         selectedGrade={selectedGrade}
-        getGrades={getGrades}
+        getData={getData}
       />
 
-      <AddModal getGrades={getGrades} />
+      <AddModal getData={getData} />
 
       <EditModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         selectedGrade={selectedGrade}
-        getGrades={getGrades}
+        getData={getData}
       />
 
       <ViewModal

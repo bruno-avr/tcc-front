@@ -28,4 +28,10 @@ export default class GradeAPI {
     if (response.status === 200) return response.data;
     throw new Error(response.data.errors);
   }
+
+  async getNames() {
+    const response = await this.requester.get("/grade/names");
+    if (response.status === 200) return response.data;
+    throw new Error(response.data.errors);
+  }
 }

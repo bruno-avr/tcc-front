@@ -10,4 +10,17 @@ export default class ClassAPI {
     if (response.status === 200) return response.data;
     throw new Error(response.data.errors);
   }
+
+  async addClass({ section, gradeId }) {
+    const response = await this.requester.post("/class", {
+      section,
+      grade: {
+        connect: {
+          id: gradeId,
+        },
+      },
+    });
+    if (response.status === 201) return response.data;
+    throw new Error(response.data.errors);
+  }
 }

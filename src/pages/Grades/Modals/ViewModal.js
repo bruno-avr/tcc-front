@@ -89,7 +89,7 @@ export default function ViewModal({
             {selectedGrade.classes.map((_class, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
                 <Typography variant="body1" gutterBottom>
-                  {_class.name}
+                  {`${selectedGrade.name} - ${_class.section}`}
                 </Typography>
               </Grid>
             ))}

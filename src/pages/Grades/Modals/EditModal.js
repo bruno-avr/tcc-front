@@ -18,7 +18,7 @@ export default function EditModal({
   modalOpen,
   setModalOpen,
   selectedGrade,
-  getGrades,
+  getData,
 }) {
   const [loading, setLoading] = useState(false);
   const [newGradeName, setNewGradeName] = useState("");
@@ -37,7 +37,7 @@ export default function EditModal({
     try {
       const gradeApi = new GradeAPI(requester);
       await gradeApi.editGrade(selectedGrade.id, newGradeName);
-      await getGrades();
+      await getData();
       closeModal();
       toast.success("Série alterada com sucesso!");
       setNewGradeName("");

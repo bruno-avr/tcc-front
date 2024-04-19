@@ -11,11 +11,16 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import AddModal from "./Modals/AddModal";
+import ViewModal from "./Modals/ViewModal";
+import EditModal from "./Modals/EditModal";
 
 export default function Classes() {
   const [classes, setClasses] = useState([]);
+  const [modalOpen, setModalOpen] = useState(null);
+  const [selectedClass, setSelectedClass] = useState({});
 
-  async function getClasses() {
+  async function getData() {
     try {
       const gradeApi = new ClassAPI(requester);
       const response = await gradeApi.getClasses();
@@ -26,8 +31,13 @@ export default function Classes() {
   }
 
   useEffect(() => {
-    getClasses();
+    getData();
   }, []);
+
+  const handleView = (_class) => {
+    setSelectedClass(_class);
+    setModalOpen("view");
+  };
 
   return (
     <Grid container spacing={3}>
@@ -41,7 +51,11 @@ export default function Classes() {
             </CardContent>
             <CardActions>
               <Box sx={{ ml: "auto" }}>
-                <Button size="small" color="primary" onClick={() => {}}>
+                <Button
+                  size="small"
+                  color="primary"
+                  onClick={() => handleView(_class)}
+                >
                   Ver mais
                 </Button>
               </Box>
@@ -49,6 +63,19 @@ export default function Classes() {
           </Card>
         </Grid>
       ))}
+      <AddModal getData={getData} />
+      <ViewModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        selectedClass={selectedClass}
+        setSelectedClass={setSelectedClass}
+      />
+      <EditModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        selectedClass={selectedClass}
+        getData={getData}
+      />
     </Grid>
   );
 }

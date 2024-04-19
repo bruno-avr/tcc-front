@@ -17,7 +17,7 @@ export default function DeleteModal({
   modalOpen,
   setModalOpen,
   selectedGrade,
-  getGrades,
+  getData,
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +30,7 @@ export default function DeleteModal({
     try {
       const gradeApi = new GradeAPI(requester);
       await gradeApi.deleteGrade(selectedGrade.id);
-      await getGrades();
+      await getData();
       closeModal();
       toast.success("Série excluída com sucesso!");
     } catch (error) {

@@ -15,29 +15,29 @@ import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
 import { AppContext } from "../../../context/AppContext";
 
-export default function AddModal({ getGrades }) {
+export default function AddModal({ getData }) {
   const { isAddModalOpen, closeAddModal } = useContext(AppContext);
   const [newGradeName, setNewGradeName] = useState("");
 
-  const [loadingAction, setLoadingAction] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setNewGradeName("");
   }, [isAddModalOpen]);
 
   const handleAddGrade = async () => {
-    setLoadingAction(true);
+    setLoading(true);
     try {
       const gradeApi = new GradeAPI(requester);
       await gradeApi.addGrade(newGradeName);
-      await getGrades();
+      await getData();
       closeAddModal();
       setNewGradeName("");
       toast.success("Nova série adicionada com sucesso!");
     } catch (error) {
       toast.error(error.message);
     }
-    setLoadingAction(false);
+    setLoading(false);
   };
 
   return (
@@ -62,7 +62,7 @@ export default function AddModal({ getGrades }) {
           onClick={handleAddGrade}
           variant="contained"
           color="success"
-          loading={loadingAction}
+          loading={loading}
           startIcon={<AddIcon />}
         >
           Adicionar
