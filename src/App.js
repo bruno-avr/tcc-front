@@ -11,21 +11,25 @@ import Grades from "./pages/Grades";
 import Classes from "./pages/Classes";
 import Subjects from "./pages/Subjects";
 import AppContextProvider from "./context/AppContext";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 function App() {
   return (
     <Router>
-      <AppContextProvider>
-        <Layout>
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route exact path="/teachers" element={<Teachers />} />
-            <Route exact path="/grades" element={<Grades />} />
-            <Route exact path="/classes" element={<Classes />} />
-            <Route exact path="/subjects" element={<Subjects />} />
-          </Routes>
-        </Layout>
-      </AppContextProvider>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <AppContextProvider>
+          <Layout>
+            <Routes>
+              <Route exact path="/" element={<Home />} />
+              <Route exact path="/teachers" element={<Teachers />} />
+              <Route exact path="/grades" element={<Grades />} />
+              <Route exact path="/classes" element={<Classes />} />
+              <Route exact path="/subjects" element={<Subjects />} />
+            </Routes>
+          </Layout>
+        </AppContextProvider>
+      </LocalizationProvider>
     </Router>
   );
 }

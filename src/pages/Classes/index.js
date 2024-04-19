@@ -14,6 +14,7 @@ import {
 import AddModal from "./Modals/AddModal";
 import ViewModal from "./Modals/ViewModal";
 import EditModal from "./Modals/EditModal";
+import DeleteModal from "./Modals/DeleteModal";
 
 export default function Classes() {
   const [classes, setClasses] = useState([]);
@@ -63,19 +64,29 @@ export default function Classes() {
           </Card>
         </Grid>
       ))}
-      <AddModal getData={getData} classes={classes} />
+
       <ViewModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         selectedClass={selectedClass}
         setSelectedClass={setSelectedClass}
       />
+
+      <AddModal getData={getData} classes={classes} />
+
       <EditModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         selectedClass={selectedClass}
         getData={getData}
         classes={classes}
+      />
+
+      <DeleteModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        selectedClass={selectedClass}
+        getData={getData}
       />
     </Grid>
   );

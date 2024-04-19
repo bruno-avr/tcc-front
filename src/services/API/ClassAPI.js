@@ -38,4 +38,10 @@ export default class ClassAPI {
     if (response.status === 200) return response.data;
     throw new Error(response.data.errors);
   }
+
+  async deleteClass(id) {
+    const response = await this.requester.delete("/class/" + id);
+    if (response.status === 200) return response.data;
+    throw new Error(response.data.errors);
+  }
 }

@@ -33,6 +33,7 @@ import {
 } from "../utils/time";
 import { LESSON_LENGTH } from "../utils/constants";
 import WaitLoading from "./WaitLoading";
+import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
 
 const minutesInADay = 1440;
 
@@ -193,11 +194,15 @@ export default function ClassEditor({
   );
 
   const AddTimeModal = () => {
-    const [hours, setHours] = useState(0);
-    const [minutes, setMinutes] = useState(0);
+    const [time, setTime] = useState(null);
 
     function addTime() {
-      const thisTime = hours * 60 + minutes;
+      if (!time) {
+        toast.error("Nenhum horário foi escolhido.");
+        return;
+      }
+
+      const thisTime = time.hour() * 60 + time.minute();
       const error = getAddTimeSlotError(currTimeSlots, thisTime);
       if (error) {
         toast.error(error);
@@ -213,32 +218,17 @@ export default function ClassEditor({
           Adicionar horário ({daysOfWeekDict[currWeekDay].toLowerCase()})
         </DialogTitle>
         <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={6}>
-              <TextField
-                type="number"
-                label="Horas"
-                value={hours}
-                onChange={(e) => {
-                  setHours(parseInt(e.target.value));
-                }}
-                inputProps={{ min: 0, max: 23 }}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                type="number"
-                label="Minutos"
-                value={minutes}
-                onChange={(e) => {
-                  setMinutes(parseInt(e.target.value));
-                }}
-                inputProps={{ min: 0, max: 59 }}
-                fullWidth
-              />
-            </Grid>
-          </Grid>
+          <StaticTimePicker
+            ampm={false}
+            localeText={{
+              timePickerToolbarTitle: "Escolha o horário de início",
+            }}
+            slotProps={{
+              actionBar: { actions: [] },
+            }}
+            value={time}
+            onChange={(newValue) => setTime(newValue)}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={closeAddTimeModal}>Cancelar</Button>

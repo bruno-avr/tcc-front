@@ -73,11 +73,11 @@ export default function Grades() {
         </Grid>
       ))}
 
-      <DeleteModal
+      <ViewModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         selectedGrade={selectedGrade}
-        getData={getData}
+        setSelectedGrade={setSelectedGrade}
       />
 
       <AddModal getData={getData} />
@@ -89,11 +89,11 @@ export default function Grades() {
         getData={getData}
       />
 
-      <ViewModal
+      <DeleteModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         selectedGrade={selectedGrade}
-        setSelectedGrade={setSelectedGrade}
+        getData={getData}
       />
     </Grid>
   );
