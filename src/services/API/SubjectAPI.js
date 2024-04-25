@@ -10,4 +10,10 @@ export default class SubjectAPI {
     if (response.status === 200) return response.data;
     throw new Error(response.data.errors);
   }
+
+  async deleteSubject(id) {
+    const response = await this.requester.delete("/subject/" + id);
+    if (response.status === 200) return response.data;
+    throw new Error(response.data.errors);
+  }
 }
