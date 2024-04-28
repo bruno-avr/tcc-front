@@ -46,7 +46,7 @@ export default function Classes() {
         <Grid item xs={12} sm={6} md={4} lg={3} key={_class.id}>
           <Card>
             <CardContent>
-              <Typography variant="h5" component="div">
+              <Typography variant="h6" component="div">
                 {`${_class.grade.name} - ${_class.section}`}
               </Typography>
             </CardContent>

@@ -11,32 +11,31 @@ import EditIcon from "@mui/icons-material/Edit";
 import requester from "../../../services/Requester/Requester";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
-import SubjectEditor from "../../../components/SubjectEditor";
-import SubjectAPI from "../../../services/API/SubjectAPI";
+import TeacherAPI from "../../../services/API/TeacherAPI";
 
 export default function EditModal({
   modalOpen,
   setModalOpen,
-  selectedSubject,
+  selectedTeacher,
   getData,
 }) {
-  const [newSubject, setNewSubject] = useState(false);
+  const [newTeacher, setNewTeacher] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const closeModal = () => {
     setModalOpen(false);
   };
 
-  const handleEditSubject = async () => {
+  const handleEditTeacher = async () => {
     setLoading(true);
     try {
-      if (!newSubject?.name)
-        throw new Error("Informe um nome para a disciplina.");
-      const subjectApi = new SubjectAPI(requester);
-      await subjectApi.editSubject(selectedSubject.id, newSubject);
+      if (!newTeacher?.name)
+        throw new Error("Informe um nome para o professor.");
+      const teacherApi = new TeacherAPI(requester);
+      await teacherApi.editTeacher(selectedTeacher.id, newTeacher);
       await getData();
       closeModal();
-      toast.success("Disciplina alterada com sucesso!");
+      toast.success("Professor alterado com sucesso!");
     } catch (error) {
       toast.error(error.message);
     }
@@ -45,18 +44,12 @@ export default function EditModal({
 
   return (
     <Dialog open={modalOpen === "edit"} onClose={closeModal} fullWidth>
-      <DialogTitle>Editar Disciplina</DialogTitle>
-      <DialogContent>
-        <SubjectEditor
-          selectedSubject={selectedSubject}
-          isOpen={modalOpen === "edit"}
-          setNewSubject={setNewSubject}
-        />
-      </DialogContent>
+      <DialogTitle>Editar Professor</DialogTitle>
+      <DialogContent></DialogContent>
       <DialogActions>
         <Button onClick={closeModal}>Cancelar</Button>
         <LoadingButton
-          onClick={handleEditSubject}
+          onClick={handleEditTeacher}
           variant="contained"
           color="primary"
           loading={loading}

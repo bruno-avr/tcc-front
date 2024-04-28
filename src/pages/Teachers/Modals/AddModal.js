@@ -12,25 +12,24 @@ import AddIcon from "@mui/icons-material/Add";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
 import { AppContext } from "../../../context/AppContext";
-import SubjectEditor from "../../../components/SubjectEditor";
-import SubjectAPI from "../../../services/API/SubjectAPI";
+import TeacherAPI from "../../../services/API/TeacherAPI";
 
 export default function AddModal({ getData }) {
   const { isAddModalOpen, closeAddModal } = useContext(AppContext);
 
   const [loading, setLoading] = useState(false);
-  const [newSubject, setNewSubject] = useState(false);
+  const [newTeacher, setNewTeacher] = useState(false);
 
-  const handleAddSubject = async () => {
+  const handleAddTeacher = async () => {
     setLoading(true);
     try {
-      if (!newSubject?.name)
-        throw new Error("Informe um nome para a disciplina.");
-      const subjectApi = new SubjectAPI(requester);
-      await subjectApi.addSubject(newSubject);
+      if (!newTeacher?.name)
+        throw new Error("Informe um nome para o professor.");
+      const teacherApi = new TeacherAPI(requester);
+      await teacherApi.addTeacher(newTeacher);
       await getData();
       closeAddModal();
-      toast.success("Nova disciplina adicionada com sucesso!");
+      toast.success("Novo professor adicionado com sucesso!");
     } catch (error) {
       toast.error(error.message);
     }
@@ -39,14 +38,12 @@ export default function AddModal({ getData }) {
 
   return (
     <Dialog open={isAddModalOpen} onClose={closeAddModal} fullWidth>
-      <DialogTitle>Adicionar Disciplina</DialogTitle>
-      <DialogContent>
-        <SubjectEditor isOpen={isAddModalOpen} setNewSubject={setNewSubject} />
-      </DialogContent>
+      <DialogTitle>Adicionar Professor</DialogTitle>
+      <DialogContent></DialogContent>
       <DialogActions>
         <Button onClick={closeAddModal}>Cancelar</Button>
         <LoadingButton
-          onClick={handleAddSubject}
+          onClick={handleAddTeacher}
           variant="contained"
           color="success"
           loading={loading}

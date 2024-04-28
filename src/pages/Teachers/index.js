@@ -1,61 +1,55 @@
 import React, { useEffect, useState } from "react";
-
 import {
   Grid,
+  Button,
   Card,
   CardContent,
   Typography,
   CardActions,
   Box,
-  Button,
 } from "@mui/material";
-import GradeAPI from "../../services/API/GradeAPI";
-import requester from "../../services/Requester/Requester";
-import { toast } from "react-toastify";
+import TeacherAPI from "../../services/API/TeacherAPI";
+import Requester from "../../services/Requester/Requester";
 import ViewModal from "./Modals/ViewModal";
-import EditModal from "./Modals/EditModal";
 import AddModal from "./Modals/AddModal";
+import EditModal from "./Modals/EditModal";
 import DeleteModal from "./Modals/DeleteModal";
 
-export default function Grades() {
-  const [grades, setGrades] = useState([]);
+export default function Teachers() {
+  const [teachers, setTeachers] = useState([]);
 
-  const [selectedGrade, setSelectedGrade] = useState({});
+  const [selectedTeacher, setSelectedTeacher] = useState({});
   const [modalOpen, setModalOpen] = useState(null);
 
   async function getData() {
     try {
-      const gradeApi = new GradeAPI(requester);
-      const response = await gradeApi.getGrades();
-      setGrades(response);
+      const teacherApi = new TeacherAPI(Requester);
+      const response = await teacherApi.getTeachers();
+      setTeachers(response);
+      return response;
     } catch (error) {
-      toast.error(error.message);
+      console.log("error");
+      console.log(error);
     }
   }
 
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const handleView = (grade) => {
-    setSelectedGrade(grade);
+  const handleView = (teacher) => {
+    setSelectedTeacher(teacher);
     setModalOpen("view");
   };
 
+  useEffect(() => {
+    getData();
+  });
+
   return (
     <Grid container spacing={3}>
-      {grades.map((grade) => (
-        <Grid item xs={12} sm={6} md={4} lg={3} key={grade.id}>
+      {teachers.map((teacher) => (
+        <Grid item xs={12} sm={6} md={4} lg={3} key={teacher.id}>
           <Card>
             <CardContent>
               <Typography variant="h6" component="div">
-                {grade.name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Número de turmas: {grade.classes.length}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Número de disciplinas: {grade.subjects.length}
+                {teacher.name}
               </Typography>
             </CardContent>
             <CardActions>
@@ -63,7 +57,7 @@ export default function Grades() {
                 <Button
                   size="small"
                   color="primary"
-                  onClick={() => handleView(grade)}
+                  onClick={() => handleView(teacher)}
                 >
                   Ver mais
                 </Button>
@@ -76,8 +70,8 @@ export default function Grades() {
       <ViewModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
-        selectedGrade={selectedGrade}
-        setSelectedGrade={setSelectedGrade}
+        selectedTeacher={selectedTeacher}
+        setSelectedTeacher={setSelectedTeacher}
       />
 
       <AddModal getData={getData} />
@@ -85,14 +79,14 @@ export default function Grades() {
       <EditModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
-        selectedGrade={selectedGrade}
+        selectedTeacher={selectedTeacher}
         getData={getData}
       />
 
       <DeleteModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
-        selectedGrade={selectedGrade}
+        selectedTeacher={selectedTeacher}
         getData={getData}
       />
     </Grid>
