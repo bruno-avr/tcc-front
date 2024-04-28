@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 
 import {
   Dialog,
@@ -6,33 +6,30 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  TextField,
 } from "@mui/material";
-import GradeAPI from "../../../services/API/GradeAPI";
 import requester from "../../../services/Requester/Requester";
 import AddIcon from "@mui/icons-material/Add";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
 import { AppContext } from "../../../context/AppContext";
+import SubjectEditor from "../../../components/SubjectEditor";
+import SubjectAPI from "../../../services/API/SubjectAPI";
 
 export default function AddModal({ getData }) {
   const { isAddModalOpen, closeAddModal } = useContext(AppContext);
-  const [newGradeName, setNewGradeName] = useState("");
 
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setNewGradeName("");
-  }, [isAddModalOpen]);
+  const [newSubject, setNewSubject] = useState(false);
 
   const handleAddGrade = async () => {
     setLoading(true);
     try {
-      const gradeApi = new GradeAPI(requester);
-      await gradeApi.addGrade(newGradeName);
+      if (!newSubject?.name)
+        throw new Error("Informe um nome para a disciplina.");
+      const subjectApi = new SubjectAPI(requester);
+      await subjectApi.addSubject(newSubject);
       await getData();
       closeAddModal();
-      setNewGradeName("");
       toast.success("Nova disciplina adicionada com sucesso!");
     } catch (error) {
       toast.error(error.message);
@@ -44,17 +41,7 @@ export default function AddModal({ getData }) {
     <Dialog open={isAddModalOpen} onClose={closeAddModal} fullWidth>
       <DialogTitle>Adicionar Disciplina</DialogTitle>
       <DialogContent>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="newGradeName"
-          label="Nome da Disciplina"
-          type="text"
-          fullWidth
-          value={newGradeName}
-          onChange={(e) => setNewGradeName(e.target.value)}
-          required
-        />
+        <SubjectEditor isOpen={isAddModalOpen} setNewSubject={setNewSubject} />
       </DialogContent>
       <DialogActions>
         <Button onClick={closeAddModal}>Cancelar</Button>
