@@ -9,6 +9,7 @@ import {
   TableBody,
   Paper,
   TableContainer,
+  Checkbox,
 } from "@mui/material";
 import requester from "../services/Requester/Requester";
 import { toast } from "react-toastify";
@@ -59,13 +60,13 @@ export default function SubjectEditor({
       name: subjectName,
       numLessonsPerGrade,
     });
-  }, [subjectName]);
+  }, [subjectName, numLessonsPerGrade]);
 
-  const handleChange = (e, gradeId) => {
+  const handleChange = (value, gradeId) => {
     setNumLessonsPerGrade((currNumLessonsPerGrade) => {
       const newObj = [...currNumLessonsPerGrade];
       const curr = newObj.find((el) => el.id === gradeId);
-      curr.numWeeklyLessons = Math.max(0, Number(e.target.value));
+      curr.numWeeklyLessons = Math.max(0, Number(value));
       return newObj;
     });
   };
@@ -83,30 +84,42 @@ export default function SubjectEditor({
         onChange={(e) => setSubjectName(e.target.value)}
         required
       />
-      <TableContainer component={Paper} sx={{ mt: 2 }}>
+      <TableContainer component={Paper} variant="outlined" sx={{ mt: 2 }}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell align="center" sx={{ width: "50%" }}>
+              <TableCell align="center" sx={{ width: "10%" }}>
+                #
+              </TableCell>
+              <TableCell align="center" sx={{ width: "45%" }}>
                 Série
               </TableCell>
-              <TableCell align="center" sx={{ width: "50%" }}>
+              <TableCell align="center" sx={{ width: "45%" }}>
                 Número de aulas por semana
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {numLessonsPerGrade.map((grade) => (
-              <TableRow key={grade.id}>
-                <TableCell align="center" sx={{ width: "50%" }}>
+              <TableRow selected={grade.numWeeklyLessons} key={grade.id}>
+                <TableCell align="center" sx={{ width: "10%" }}>
+                  <Checkbox
+                    color="primary"
+                    checked={grade.numWeeklyLessons}
+                    onClick={() => {
+                      handleChange(grade.numWeeklyLessons ? 0 : 1, grade.id);
+                    }}
+                  />
+                </TableCell>
+                <TableCell align="center" sx={{ width: "45%" }}>
                   {grade.name}
                 </TableCell>
-                <TableCell sx={{ width: "50%" }}>
+                <TableCell sx={{ width: "45%" }}>
                   <TextField
                     type="number"
                     value={grade.numWeeklyLessons}
                     onChange={(e) => {
-                      handleChange(e, grade.id);
+                      handleChange(e.target.value, grade.id);
                     }}
                     inputProps={{ min: 0 }}
                   />

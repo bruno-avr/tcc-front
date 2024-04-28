@@ -10,6 +10,13 @@ import {
   DialogActions,
   Button,
   Divider,
+  TableContainer,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -57,7 +64,34 @@ export default function ViewModal({
         </Box>
         <Divider />
       </DialogTitle>
-      <DialogContent></DialogContent>
+      <DialogContent>
+        <TableContainer component={Paper} variant="outlined" sx={{ mt: 1 }}>
+          <Table>
+            <TableHead>
+              <TableRow hover>
+                <TableCell align="center" sx={{ width: "50%" }}>
+                  Série
+                </TableCell>
+                <TableCell align="center" sx={{ width: "50%" }}>
+                  Número de aulas por semana
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {selectedSubject.numLessonsPerGrade?.map((el) => (
+                <TableRow hover key={el.id}>
+                  <TableCell align="center" sx={{ width: "50%" }}>
+                    {el.grade.name}
+                  </TableCell>
+                  <TableCell align="center" sx={{ width: "50%" }}>
+                    {el.numWeeklyLessons}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </DialogContent>
       <DialogActions>
         <Button onClick={closeModal}>Fechar</Button>
       </DialogActions>

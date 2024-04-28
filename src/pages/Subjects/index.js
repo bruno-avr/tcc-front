@@ -51,6 +51,11 @@ export default function Subjects() {
               <Typography variant="h6" component="div">
                 {subject.name}
               </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {subject.numLessonsPerGrade
+                  .map((el) => el.grade.name)
+                  .join(", ")}
+              </Typography>
             </CardContent>
             <CardActions>
               <Box sx={{ ml: "auto" }}>

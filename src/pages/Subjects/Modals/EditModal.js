@@ -27,7 +27,7 @@ export default function EditModal({
     setModalOpen(false);
   };
 
-  const handleEditClass = async () => {
+  const handleEditSubject = async () => {
     setLoading(true);
     try {
       if (!newSubject?.name)
@@ -56,7 +56,7 @@ export default function EditModal({
       <DialogActions>
         <Button onClick={closeModal}>Cancelar</Button>
         <LoadingButton
-          onClick={handleEditClass}
+          onClick={handleEditSubject}
           variant="contained"
           color="primary"
           loading={loading}
