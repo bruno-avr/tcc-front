@@ -11,6 +11,12 @@ export default class SubjectAPI {
     throw new Error(response.data.errors);
   }
 
+  async getSubjectsPerClass() {
+    const response = await this.requester.get("/subject/class");
+    if (response.status === 200) return response.data;
+    throw new Error(response.data.errors);
+  }
+
   async deleteSubject(id) {
     const response = await this.requester.delete("/subject/" + id);
     if (response.status === 200) return response.data;

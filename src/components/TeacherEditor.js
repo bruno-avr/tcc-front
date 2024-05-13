@@ -25,13 +25,13 @@ export default function TeacherEditor({
   const [loading, setLoading] = useState(false);
   const [teacherName, setTeacherName] = useState("");
   const [subjects, setSubjects] = useState([]);
-  const [selectedSubjects, setSelectedSubjects] = useState({});
+  const [selectedClasses, setSelectedClasses] = useState({});
 
   async function getData() {
     setLoading(true);
     try {
       const subjectApi = new SubjectAPI(requester);
-      const response = await subjectApi.getSubjects();
+      const response = await subjectApi.getSubjectsPerClass();
       setSubjects(response);
       setTeacherName(selectedTeacher?.name || "");
     } catch (error) {
@@ -46,15 +46,14 @@ export default function TeacherEditor({
 
   useEffect(() => {
     const allValues = [];
-    for (const key in selectedSubjects) {
-      allValues.push(...selectedSubjects[key]);
+    for (const key in selectedClasses) {
+      allValues.push(...selectedClasses[key]);
     }
     setNewTeacher({
       name: teacherName,
-      subjects: allValues,
+      classes: allValues,
     });
-    console.log(allValues);
-  }, [teacherName, selectedSubjects]);
+  }, [teacherName, selectedClasses]);
 
   return (
     <WaitLoading loading={loading}>
@@ -86,9 +85,9 @@ export default function TeacherEditor({
             labelId={`${subject.id}-chip-label`}
             id={`${subject.id}-chip`}
             multiple
-            value={selectedSubjects[subject.id] || []}
+            value={selectedClasses[subject.id] || []}
             onChange={(e) => {
-              setSelectedSubjects((curr) => {
+              setSelectedClasses((curr) => {
                 const copy = { ...curr };
                 if (!e.target.value?.length) {
                   delete copy[subject.id];
@@ -107,7 +106,7 @@ export default function TeacherEditor({
             renderValue={(selected) => (
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                 {selected.map((value) => (
-                  <Chip key={value.id} label={value.grade.name} />
+                  <Chip key={value.id} label={value.name} />
                 ))}
               </Box>
             )}
@@ -120,9 +119,9 @@ export default function TeacherEditor({
               },
             }}
           >
-            {subject.subjectsPerGrade.map((el) => (
-              <MenuItem key={el.id} value={{ id: el.id, grade: el.grade }}>
-                {el.grade.name}
+            {subject.classes.map((el) => (
+              <MenuItem key={el.id} value={el}>
+                {el.name}
               </MenuItem>
             ))}
           </Select>
