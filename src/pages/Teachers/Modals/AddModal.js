@@ -13,12 +13,13 @@ import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
 import { AppContext } from "../../../context/AppContext";
 import TeacherAPI from "../../../services/API/TeacherAPI";
+import TeacherEditor from "../../../components/TeacherEditor";
 
 export default function AddModal({ getData }) {
   const { isAddModalOpen, closeAddModal } = useContext(AppContext);
 
   const [loading, setLoading] = useState(false);
-  const [newTeacher, setNewTeacher] = useState(false);
+  const [newTeacher, setNewTeacher] = useState({});
 
   const handleAddTeacher = async () => {
     setLoading(true);
@@ -39,7 +40,9 @@ export default function AddModal({ getData }) {
   return (
     <Dialog open={isAddModalOpen} onClose={closeAddModal} fullWidth>
       <DialogTitle>Adicionar Professor</DialogTitle>
-      <DialogContent></DialogContent>
+      <DialogContent>
+        <TeacherEditor isOpen={isAddModalOpen} setNewTeacher={setNewTeacher} />
+      </DialogContent>
       <DialogActions>
         <Button onClick={closeAddModal}>Cancelar</Button>
         <LoadingButton

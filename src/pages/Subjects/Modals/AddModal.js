@@ -19,7 +19,7 @@ export default function AddModal({ getData }) {
   const { isAddModalOpen, closeAddModal } = useContext(AppContext);
 
   const [loading, setLoading] = useState(false);
-  const [newSubject, setNewSubject] = useState(false);
+  const [newSubject, setNewSubject] = useState({});
 
   const handleAddSubject = async () => {
     setLoading(true);

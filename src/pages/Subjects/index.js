@@ -52,9 +52,7 @@ export default function Subjects() {
                 {subject.name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {subject.numLessonsPerGrade
-                  .map((el) => el.grade.name)
-                  .join(", ")}
+                {subject.subjectsPerGrade.map((el) => el.grade.name).join(", ")}
               </Typography>
             </CardContent>
             <CardActions>

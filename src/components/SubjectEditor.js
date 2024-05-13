@@ -23,11 +23,11 @@ export default function SubjectEditor({
 }) {
   const [loading, setLoading] = useState(false);
   const [subjectName, setSubjectName] = useState("");
-  const [numLessonsPerGrade, setNumLessonsPerGrade] = useState([]);
+  const [subjectsPerGrade, setSubjectsPerGrade] = useState([]);
 
   function getNumLessons(gradeId) {
-    if (!selectedSubject?.numLessonsPerGrade) return 0;
-    const el = selectedSubject.numLessonsPerGrade.find(
+    if (!selectedSubject?.subjectsPerGrade) return 0;
+    const el = selectedSubject.subjectsPerGrade.find(
       (el) => el.grade.id === gradeId
     );
     return el?.numWeeklyLessons || 0;
@@ -38,7 +38,7 @@ export default function SubjectEditor({
     try {
       const gradeApi = new GradeAPI(requester);
       const response = await gradeApi.getNames();
-      setNumLessonsPerGrade(
+      setSubjectsPerGrade(
         response.map((el) => ({
           ...el,
           numWeeklyLessons: getNumLessons(el.id),
@@ -58,12 +58,12 @@ export default function SubjectEditor({
   useEffect(() => {
     setNewSubject({
       name: subjectName,
-      numLessonsPerGrade,
+      subjectsPerGrade,
     });
-  }, [subjectName, numLessonsPerGrade]);
+  }, [subjectName, subjectsPerGrade]);
 
   const handleChange = (value, gradeId) => {
-    setNumLessonsPerGrade((currNumLessonsPerGrade) => {
+    setSubjectsPerGrade((currNumLessonsPerGrade) => {
       const newObj = [...currNumLessonsPerGrade];
       const curr = newObj.find((el) => el.id === gradeId);
       curr.numWeeklyLessons = Math.max(0, Number(value));
@@ -100,7 +100,7 @@ export default function SubjectEditor({
             </TableRow>
           </TableHead>
           <TableBody>
-            {numLessonsPerGrade.map((grade) => (
+            {subjectsPerGrade.map((grade) => (
               <TableRow selected={grade.numWeeklyLessons} key={grade.id}>
                 <TableCell align="center" sx={{ width: "10%" }}>
                   <Checkbox

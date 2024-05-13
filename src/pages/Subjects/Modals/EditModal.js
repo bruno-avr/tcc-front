@@ -20,7 +20,7 @@ export default function EditModal({
   selectedSubject,
   getData,
 }) {
-  const [newSubject, setNewSubject] = useState(false);
+  const [newSubject, setNewSubject] = useState({});
   const [loading, setLoading] = useState(false);
 
   const closeModal = () => {

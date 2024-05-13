@@ -78,7 +78,7 @@ export default function ViewModal({
               </TableRow>
             </TableHead>
             <TableBody>
-              {selectedSubject.numLessonsPerGrade?.map((el) => (
+              {selectedSubject.subjectsPerGrade?.map((el) => (
                 <TableRow hover key={el.id}>
                   <TableCell align="center" sx={{ width: "50%" }}>
                     {el.grade.name}

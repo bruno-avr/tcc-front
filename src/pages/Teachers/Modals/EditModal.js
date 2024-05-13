@@ -12,6 +12,7 @@ import requester from "../../../services/Requester/Requester";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
 import TeacherAPI from "../../../services/API/TeacherAPI";
+import TeacherEditor from "../../../components/TeacherEditor";
 
 export default function EditModal({
   modalOpen,
@@ -19,7 +20,7 @@ export default function EditModal({
   selectedTeacher,
   getData,
 }) {
-  const [newTeacher, setNewTeacher] = useState(false);
+  const [newTeacher, setNewTeacher] = useState({});
   const [loading, setLoading] = useState(false);
 
   const closeModal = () => {
@@ -45,7 +46,13 @@ export default function EditModal({
   return (
     <Dialog open={modalOpen === "edit"} onClose={closeModal} fullWidth>
       <DialogTitle>Editar Professor</DialogTitle>
-      <DialogContent></DialogContent>
+      <DialogContent>
+        <TeacherEditor
+          selectedTeacher={selectedTeacher}
+          isOpen={modalOpen === "edit"}
+          setNewTeacher={setNewTeacher}
+        />
+      </DialogContent>
       <DialogActions>
         <Button onClick={closeModal}>Cancelar</Button>
         <LoadingButton

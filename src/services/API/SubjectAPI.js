@@ -17,11 +17,11 @@ export default class SubjectAPI {
     throw new Error(response.data.errors);
   }
 
-  async addSubject({ name, numLessonsPerGrade }) {
+  async addSubject({ name, subjectsPerGrade }) {
     const response = await this.requester.post("/subject", {
       name,
-      numLessonsPerGrade: {
-        create: numLessonsPerGrade
+      subjectsPerGrade: {
+        create: subjectsPerGrade
           .filter((grade) => grade.numWeeklyLessons)
           .map((grade) => ({
             numWeeklyLessons: grade.numWeeklyLessons,
@@ -37,11 +37,11 @@ export default class SubjectAPI {
     throw new Error(response.data.errors);
   }
 
-  async editSubject(id, { name, numLessonsPerGrade }) {
+  async editSubject(id, { name, subjectsPerGrade }) {
     const response = await this.requester.patch("/subject/" + id, {
       name,
-      numLessonsPerGrade: {
-        create: numLessonsPerGrade
+      subjectsPerGrade: {
+        create: subjectsPerGrade
           .filter((grade) => grade.numWeeklyLessons)
           .map((grade) => ({
             numWeeklyLessons: grade.numWeeklyLessons,
