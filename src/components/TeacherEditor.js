@@ -34,6 +34,22 @@ export default function TeacherEditor({
       const response = await subjectApi.getSubjectsPerClass();
       setSubjects(response);
       setTeacherName(selectedTeacher?.name || "");
+
+      const aux = {};
+      for (const key in selectedTeacher?.selectedClasses || {}) {
+        aux[key] = [];
+        selectedTeacher.selectedClasses[key].forEach((el) => {
+          const subject = response.find((s) => s.id === key);
+          const _class = subject.classes.find(
+            (c) =>
+              c.id === el.id &&
+              c.name === el.name &&
+              c.subjectPerGradeId === el.subjectPerGradeId
+          );
+          aux[key].push(_class);
+        });
+      }
+      setSelectedClasses(aux);
     } catch (error) {
       toast.error(error.message);
     }
