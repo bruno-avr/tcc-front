@@ -93,6 +93,7 @@ const routesData = [
   {
     title: "Gerar novo horário",
     route: "/schedules/generate",
+    noContainer: true,
   },
   {
     title: "Professores",
@@ -246,9 +247,13 @@ export default function Layout({ children }) {
         }}
       >
         <Toolbar />
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          {children}
-        </Container>
+        {routesData.find((e) => e.route === location.pathname)?.noContainer ? (
+          children
+        ) : (
+          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            {children}
+          </Container>
+        )}
       </Box>
       <ToastContainer
         pauseOnFocusLoss={false}
