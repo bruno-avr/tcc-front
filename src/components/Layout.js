@@ -20,10 +20,12 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import PeopleIcon from "@mui/icons-material/People";
 import HomeIcon from "@mui/icons-material/Home";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import SchoolIcon from "@mui/icons-material/School";
 import ClassIcon from "@mui/icons-material/Class";
 import SubjectIcon from "@mui/icons-material/Subject";
 import AddIcon from "@mui/icons-material/Add";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
@@ -80,6 +82,19 @@ const routesData = [
     Icon: HomeIcon,
   },
   {
+    title: "Horários",
+    route: "/schedules",
+    Icon: CalendarMonthIcon,
+  },
+  {
+    title: "Acesso de Horários",
+    route: "/schedules/view",
+  },
+  {
+    title: "Gerar novo horário",
+    route: "/schedules/generate",
+  },
+  {
     title: "Professores",
     route: "/teachers",
     Icon: PeopleIcon,
@@ -114,6 +129,12 @@ export default function Layout({ children }) {
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  function goBack() {
+    const aux = location.pathname.split("/");
+    aux.pop();
+    navigate(aux.join("/"));
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -150,6 +171,11 @@ export default function Layout({ children }) {
               ).title
             }
           </Typography>
+          {location.pathname.split("/").length > 2 && (
+            <IconButton color="inherit" onClick={goBack}>
+              <ArrowBackIcon />
+            </IconButton>
+          )}
           {routesData.find((e) => e.route === location.pathname)
             ?.hasAddButton && (
             <IconButton color="inherit" onClick={openAddModal}>
@@ -174,26 +200,36 @@ export default function Layout({ children }) {
         </Toolbar>
         <Divider />
         <List component="nav">
-          {routesData.map(({ route, title, Icon }) => (
-            <ListItemButton key={route} onClick={() => navigate(route)}>
-              <ListItemIcon>
-                <Icon
-                  color={route === location.pathname ? "primary" : undefined}
+          {routesData
+            .filter((el) => !!el.Icon)
+            .map(({ route, title, Icon }) => (
+              <ListItemButton key={route} onClick={() => navigate(route)}>
+                <ListItemIcon>
+                  <Icon
+                    color={
+                      route.split("/")[1] === location.pathname.split("/")[1]
+                        ? "primary"
+                        : undefined
+                    }
+                  />
+                </ListItemIcon>
+                <ListItemText
+                  disableTypography
+                  primary={
+                    <Typography
+                      variant="body1"
+                      color={
+                        route.split("/")[1] === location.pathname.split("/")[1]
+                          ? "primary"
+                          : undefined
+                      }
+                    >
+                      {title}
+                    </Typography>
+                  }
                 />
-              </ListItemIcon>
-              <ListItemText
-                disableTypography
-                primary={
-                  <Typography
-                    variant="body1"
-                    color={route === location.pathname ? "primary" : undefined}
-                  >
-                    {title}
-                  </Typography>
-                }
-              />
-            </ListItemButton>
-          ))}
+              </ListItemButton>
+            ))}
         </List>
       </StyledDrawer>
 

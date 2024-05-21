@@ -5,6 +5,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import Home from "./pages/Home";
+import Schedules from "./pages/Schedules";
 import Teachers from "./pages/Teachers";
 import Layout from "./components/Layout";
 import Grades from "./pages/Grades";
@@ -13,6 +14,8 @@ import Subjects from "./pages/Subjects";
 import AppContextProvider from "./context/AppContext";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import ViewSchedule from "./pages/Schedules/View";
+import GenerateSchedule from "./pages/Schedules/Generate";
 
 function App() {
   return (
@@ -22,6 +25,13 @@ function App() {
           <Layout>
             <Routes>
               <Route exact path="/" element={<Home />} />
+              <Route exact path="/schedules/view" element={<ViewSchedule />} />
+              <Route
+                exact
+                path="/schedules/generate"
+                element={<GenerateSchedule />}
+              />
+              <Route exact path="/schedules" element={<Schedules />} />
               <Route exact path="/teachers" element={<Teachers />} />
               <Route exact path="/grades" element={<Grades />} />
               <Route exact path="/classes" element={<Classes />} />
