@@ -15,35 +15,58 @@ import {
 } from "@mui/material";
 import { daysOfWeekDict, numberToTime } from "../../../utils/time";
 import ClassIcon from "@mui/icons-material/Class";
+import { useState } from "react";
 
 const minutesInADay = 1440;
 
-const StyledTableCell = styled(TableCell)(({ theme, gray, white }) => ({
-  textAlign: "center",
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.text.primary,
-    color: theme.palette.common.white,
-    borderColor: theme.palette.text.disabled,
-    // border: 0,
-    ...(white
-      ? {
-          backgroundColor: theme.palette.text.primary,
-          // backgroundColor: theme.palette.primary.dark,
-          color: theme.palette.common.white,
-        }
-      : {}),
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-    ...(gray
-      ? {
-          backgroundColor: theme.palette.text.primary,
-          color: theme.palette.common.white,
-          borderColor: theme.palette.text.disabled,
-        }
-      : {}),
-  },
-}));
+const StyledTableCell = styled(TableCell)(
+  ({ theme, gray, selected, darkRow, draggable, hovered }) => ({
+    textAlign: "center",
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.grey[900],
+      color: theme.palette.common.white,
+      borderColor: theme.palette.text.primary,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+      ...(gray
+        ? {
+            backgroundColor: theme.palette.grey[900],
+            color: theme.palette.common.white,
+            borderColor: theme.palette.text.primary,
+            fontWeight: "bold",
+          }
+        : {}),
+      ...(selected
+        ? {
+            backgroundColor: darkRow
+              ? "rgba(237, 108, 2, 0.55)"
+              : "rgba(237, 108, 2, 0.40)",
+            borderColor: "rgba(237, 108, 2, 0.30)",
+          }
+        : {}),
+      ...(draggable
+        ? {
+            cursor: "pointer",
+            transition: "background-color 0.2s ease",
+            "&:hover": {
+              backgroundColor: selected
+                ? darkRow
+                  ? "rgba(237, 108, 2, 0.65)"
+                  : "rgba(237, 108, 2, 0.5)"
+                : "rgba(173, 216, 230, 0.7)",
+              border: 0,
+            },
+          }
+        : {}),
+      ...(hovered
+        ? {
+            backgroundColor: "rgba(173, 216, 230, 0.7)",
+          }
+        : {}),
+    },
+  })
+);
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(even)": {
@@ -55,7 +78,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const Schedule = ({ schedule, showTeachers }) => {
+const Schedule = ({
+  schedule,
+  showTeachers,
+  draggedLesson,
+  setDraggedLesson,
+  swapLessons,
+  selectLesson,
+}) => {
   const weekSchedule = {};
   const times = new Set();
 
@@ -92,21 +122,54 @@ const Schedule = ({ schedule, showTeachers }) => {
     );
   }
 
+  const [hoveredLesson, setHoveredLesson] = useState({});
+
+  const handleDragStart = (className, lesson) => {
+    setDraggedLesson({ className, lesson });
+  };
+
+  const handleDragLeave = () => {
+    setHoveredLesson({});
+  };
+
+  const handleDragOver = (event, className, lesson) => {
+    event.preventDefault();
+    if (className === draggedLesson.className) {
+      setHoveredLesson(lesson);
+    }
+  };
+
+  const handleDrop = (event, className, lesson) => {
+    event.preventDefault();
+    const droppedLesson = { className, lesson };
+
+    if (droppedLesson.className === draggedLesson.className) {
+      if (
+        droppedLesson.lesson.subject?.name !==
+        draggedLesson.lesson.subject?.name
+      ) {
+        swapLessons(draggedLesson.lesson, droppedLesson.lesson);
+      }
+    }
+    setDraggedLesson(null);
+    setHoveredLesson({});
+  };
+
   return (
     <TableContainer sx={{ mb: 3 }} component={Paper}>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <StyledTableCell white>
+            <StyledTableCell sx={{ px: 0 }}>
               <Chip
                 avatar={
                   <Avatar>
                     <ClassIcon sx={{ fontSize: 20 }} />
                   </Avatar>
                 }
-                // icon={<ClassIcon />}
                 color="primary"
                 label={schedule.className}
+                sx={{ fontSize: 14 }}
               />
             </StyledTableCell>
             {Object.keys(weekSchedule).map((weekDay) => (
@@ -117,13 +180,44 @@ const Schedule = ({ schedule, showTeachers }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {Array.from(times).map((time) => (
+          {Array.from(times).map((time, rowIndex) => (
             <StyledTableRow key={time}>
               <StyledTableCell gray component="th" scope="row">
                 {numberToTime(time)}
               </StyledTableCell>
-              {Object.keys(weekSchedule).map((weekDay) => (
-                <StyledTableCell>
+              {Object.keys(weekSchedule).map((weekDay, colIndex) => (
+                <StyledTableCell
+                  key={colIndex}
+                  selected={weekSchedule[weekDay][time].isSelected}
+                  darkRow={rowIndex % 2}
+                  hovered={
+                    hoveredLesson.startingTime ===
+                    weekSchedule[weekDay][time].startingTime
+                  }
+                  draggable
+                  onDragStart={() =>
+                    handleDragStart(
+                      schedule.className,
+                      weekSchedule[weekDay][time]
+                    )
+                  }
+                  onDragOver={(event) =>
+                    handleDragOver(
+                      event,
+                      schedule.className,
+                      weekSchedule[weekDay][time]
+                    )
+                  }
+                  onDragLeave={handleDragLeave}
+                  onDrop={(event) =>
+                    handleDrop(
+                      event,
+                      schedule.className,
+                      weekSchedule[weekDay][time]
+                    )
+                  }
+                  onClick={() => selectLesson(weekSchedule[weekDay][time])}
+                >
                   {getLessonStr(weekSchedule[weekDay][time])}
                 </StyledTableCell>
               ))}

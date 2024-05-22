@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ReplayIcon from "@mui/icons-material/Replay";
+import CalculateIcon from "@mui/icons-material/Calculate";
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
@@ -23,11 +24,41 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.grey[100],
 }));
 
-const Footer = ({ isFeasible, score, setShowTeachers, getData }) => {
-  return (
-    <StyledAppBar>
-      <Divider />
-      <Toolbar>
+const Footer = ({
+  isFeasible,
+  score,
+  setShowTeachers,
+  getData,
+  changesDetected,
+  resetToDefault,
+  hasSelectedCells,
+}) => {
+  function getStatus() {
+    if (changesDetected)
+      return (
+        <>
+          <Tooltip title="Desfazer mudanças">
+            <IconButton
+              color="warning"
+              onClick={resetToDefault}
+              variant="contained"
+              fullWidth
+            >
+              <ReplayIcon />
+            </IconButton>
+          </Tooltip>
+          <Typography
+            textAlign="center"
+            variant="h6"
+            component="div"
+            color="warning.main"
+          >
+            Mudança detectada
+          </Typography>
+        </>
+      );
+    return (
+      <>
         <Typography
           textAlign="center"
           variant="h6"
@@ -47,6 +78,14 @@ const Footer = ({ isFeasible, score, setShowTeachers, getData }) => {
             {` - Pontuação: ${score}`}
           </Typography>
         )}
+      </>
+    );
+  }
+  return (
+    <StyledAppBar>
+      <Divider />
+      <Toolbar>
+        {getStatus()}
         <Box flexGrow={1} />
         <Tooltip title="Vizualizar professores">
           <Checkbox
@@ -60,6 +99,19 @@ const Footer = ({ isFeasible, score, setShowTeachers, getData }) => {
             <ReplayIcon />
           </IconButton>
         </Tooltip>
+        {!!hasSelectedCells && (
+          <Tooltip title="Recalcula todo o horário, exceto as aulas selecionadas.">
+            <Button
+              // onClick={() => }
+              startIcon={<CalculateIcon />}
+              variant="contained"
+              color="warning"
+              sx={{ ml: 2 }}
+            >
+              Recalculo Fixado
+            </Button>
+          </Tooltip>
+        )}
         <Button
           // onClick={() => }
           startIcon={<BookmarkIcon />}
