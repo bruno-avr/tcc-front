@@ -34,6 +34,41 @@ const Generate = () => {
     setLoading(false);
   }
 
+  async function fixedRecalculation() {
+    const fixedSchedule = {};
+    schedules.forEach((schedule) => {
+      fixedSchedule[schedule.classId] = {};
+      schedule.lessons.forEach((lesson) => {
+        fixedSchedule[schedule.classId][lesson.startingTime] = {};
+        const fixedScheduleLesson =
+          fixedSchedule[schedule.classId][lesson.startingTime];
+
+        if (lesson.empty) fixedScheduleLesson.subjectId = "EMPTY";
+        else fixedScheduleLesson.subjectId = lesson.subject.id;
+
+        if (lesson.empty || !lesson.teacher)
+          fixedScheduleLesson.teacherId = "EMPTY";
+        else fixedScheduleLesson.teacherId = lesson.teacher.id;
+
+        fixedScheduleLesson.isFixed = lesson.isSelected ? 1 : 0;
+      });
+    });
+    setShowTeachers(false);
+    setLoading(true);
+    try {
+      const scheduleApi = new ScheduleAPI(requester);
+      const response = await scheduleApi.fixedRecalculation(fixedSchedule);
+      setIsFeasible(response?.isFeasible || false);
+      setScore(response?.score || 0);
+      setSchedules(response?.schedules || []);
+      setSchedulesStr(JSON.stringify(response?.schedules || []));
+      setChangesDetected(false);
+    } catch (error) {
+      toast.error(error.message);
+    }
+    setLoading(false);
+  }
+
   useEffect(() => {
     getData();
   }, []);
@@ -100,6 +135,7 @@ const Generate = () => {
         changesDetected={changesDetected}
         hasSelectedCells={hasSelectedCells()}
         resetToDefault={resetToDefault}
+        fixedRecalculation={fixedRecalculation}
       />
     </WaitLoading>
   );

@@ -32,6 +32,7 @@ const Footer = ({
   changesDetected,
   resetToDefault,
   hasSelectedCells,
+  fixedRecalculation,
 }) => {
   function getStatus() {
     if (changesDetected)
@@ -102,7 +103,7 @@ const Footer = ({
         {!!hasSelectedCells && (
           <Tooltip title="Recalcula todo o horário, exceto as aulas selecionadas.">
             <Button
-              // onClick={() => }
+              onClick={fixedRecalculation}
               startIcon={<CalculateIcon />}
               variant="contained"
               color="warning"
