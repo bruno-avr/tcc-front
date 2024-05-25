@@ -21,7 +21,7 @@ export default function SubjectEditor({
   isOpen,
   setNewSubject,
 }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [subjectName, setSubjectName] = useState("");
   const [subjectsPerGrade, setSubjectsPerGrade] = useState([]);
 

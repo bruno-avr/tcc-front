@@ -43,7 +43,7 @@ export default function ClassEditor({
   setNewClass,
   classes,
 }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [addTimeModalOpen, setAddTimeModalOpen] = useState(false);
   const [copyModalOpen, setCopyModalOpen] = useState(false);
   const [selectedGrade, setSelectedGrade] = useState("");

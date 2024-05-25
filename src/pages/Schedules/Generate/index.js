@@ -6,23 +6,55 @@ import { toast } from "react-toastify";
 import requester from "../../../services/Requester/Requester";
 import { Container } from "@mui/material";
 import Schedule from "./Schedule";
+import { useNavigate } from "react-router-dom";
 
 const Generate = () => {
+  const navigate = useNavigate();
   const [schedules, setSchedules] = useState([]);
   const [schedulesStr, setSchedulesStr] = useState(null);
   const [isFeasible, setIsFeasible] = useState(false);
   const [score, setScore] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showTeachers, setShowTeachers] = useState(false);
   const [draggedLesson, setDraggedLesson] = useState(null);
   const [changesDetected, setChangesDetected] = useState(false);
+  const [metaheuristic, setMetaheuristic] = useState("simulatedAnnealing");
+
+  async function saveSchedule() {
+    setLoading(true);
+    try {
+      const processedSchedules = schedules.map((schedule) => ({
+        ...schedule,
+        lessons: schedule.lessons.map((lesson) => {
+          delete lesson.isSelected;
+          return lesson;
+        }),
+      }));
+      const data = {
+        metaheuristic,
+        schedules: processedSchedules,
+        hasManualChange: !!changesDetected,
+      };
+      if (!changesDetected) {
+        data.isFeasible = isFeasible;
+        if (isFeasible) data.score = score;
+      }
+      const scheduleApi = new ScheduleAPI(requester);
+      await scheduleApi.saveSchedule(data);
+      toast.success("Horário salvo com sucesso.");
+      navigate("/schedules/view");
+    } catch (error) {
+      toast.error(error.message);
+    }
+    setLoading(false);
+  }
 
   async function getData() {
     setShowTeachers(false);
     setLoading(true);
     try {
       const scheduleApi = new ScheduleAPI(requester);
-      const response = await scheduleApi.generateSchedule();
+      const response = await scheduleApi.generateSchedule(metaheuristic);
       setIsFeasible(response?.isFeasible || false);
       setScore(response?.score || 0);
       setSchedules(response?.schedules || []);
@@ -57,7 +89,10 @@ const Generate = () => {
     setLoading(true);
     try {
       const scheduleApi = new ScheduleAPI(requester);
-      const response = await scheduleApi.fixedRecalculation(fixedSchedule);
+      const response = await scheduleApi.fixedRecalculation(
+        metaheuristic,
+        fixedSchedule
+      );
       setIsFeasible(response?.isFeasible || false);
       setScore(response?.score || 0);
       setSchedules(response?.schedules || []);
@@ -71,7 +106,7 @@ const Generate = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [metaheuristic]);
 
   function swapLessons(index, lesson1, lesson2) {
     setChangesDetected(true);
@@ -136,6 +171,9 @@ const Generate = () => {
         hasSelectedCells={hasSelectedCells()}
         resetToDefault={resetToDefault}
         fixedRecalculation={fixedRecalculation}
+        saveSchedule={saveSchedule}
+        setMetaheuristic={setMetaheuristic}
+        metaheuristic={metaheuristic}
       />
     </WaitLoading>
   );

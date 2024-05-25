@@ -22,7 +22,7 @@ export default function TeacherEditor({
   isOpen,
   setNewTeacher,
 }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [teacherName, setTeacherName] = useState("");
   const [subjects, setSubjects] = useState([]);
   const [selectedClasses, setSelectedClasses] = useState({});

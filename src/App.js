@@ -14,7 +14,8 @@ import Subjects from "./pages/Subjects";
 import AppContextProvider from "./context/AppContext";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import ViewSchedule from "./pages/Schedules/View";
+import ViewSchedules from "./pages/Schedules/View";
+import ViewSchedule from "./pages/Schedules/View/Schedule";
 import GenerateSchedule from "./pages/Schedules/Generate";
 
 function App() {
@@ -25,7 +26,8 @@ function App() {
           <Layout>
             <Routes>
               <Route exact path="/" element={<Home />} />
-              <Route exact path="/schedules/view" element={<ViewSchedule />} />
+              <Route path="/schedules/view/:id" element={<ViewSchedule />} />
+              <Route exact path="/schedules/view" element={<ViewSchedules />} />
               <Route
                 exact
                 path="/schedules/generate"

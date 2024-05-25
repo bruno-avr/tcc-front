@@ -7,7 +7,12 @@ import {
   Button,
   Checkbox,
   Divider,
+  FormControl,
   IconButton,
+  InputBase,
+  ListSubheader,
+  MenuItem,
+  Select,
   Toolbar,
   Tooltip,
   Typography,
@@ -15,6 +20,8 @@ import {
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ReplayIcon from "@mui/icons-material/Replay";
 import CalculateIcon from "@mui/icons-material/Calculate";
+import { formatDate } from "../../../utils/time";
+import { METAHEURISTIC_DICT } from "../../../utils/constants";
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
@@ -22,6 +29,25 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   top: "auto",
   bottom: 0,
   backgroundColor: theme.palette.grey[100],
+}));
+
+const BootstrapInput = styled(InputBase)(({ theme }) => ({
+  "label + &": {
+    marginTop: theme.spacing(3),
+  },
+  "& .MuiInputBase-input": {
+    borderRadius: 4,
+    position: "relative",
+    border: "1px solid #ced4da",
+    fontSize: 16,
+    padding: "10px 26px 10px 12px",
+    transition: theme.transitions.create(["border-color", "box-shadow"]),
+    "&:focus": {
+      borderRadius: 4,
+      borderColor: "#80bdff",
+      boxShadow: "0 0 0 0.2rem rgba(0,123,255,.15)",
+    },
+  },
 }));
 
 const Footer = ({
@@ -33,8 +59,24 @@ const Footer = ({
   resetToDefault,
   hasSelectedCells,
   fixedRecalculation,
+  saveSchedule,
+  createdAt,
+  metaheuristic,
+  setMetaheuristic,
+  hasManualChange,
 }) => {
   function getStatus() {
+    if (hasManualChange)
+      return (
+        <Typography
+          textAlign="center"
+          variant="h6"
+          component="div"
+          color="warning.main"
+        >
+          Editado pelo próprio usuário
+        </Typography>
+      );
     if (changesDetected)
       return (
         <>
@@ -88,6 +130,39 @@ const Footer = ({
       <Toolbar>
         {getStatus()}
         <Box flexGrow={1} />
+
+        {createdAt ? (
+          <Typography
+            textAlign="center"
+            variant="body2"
+            component="div"
+            color="text.secondary"
+            sx={{ mr: 3 }}
+          >
+            {`Criado ${
+              metaheuristic ? `usando ${METAHEURISTIC_DICT[metaheuristic]}` : ""
+            } em ${formatDate(createdAt)}`}
+          </Typography>
+        ) : (
+          <FormControl sx={{ minWidth: 120, mr: 1 }} size="small">
+            <Select
+              value={metaheuristic}
+              onChange={(e) => {
+                setMetaheuristic(e.target.value);
+              }}
+              input={<BootstrapInput />}
+            >
+              <ListSubheader sx={{ mb: 1 }}>Metaheurística</ListSubheader>
+              {Object.keys(METAHEURISTIC_DICT).map((m) => (
+                <MenuItem key={m} value={m}>
+                  {METAHEURISTIC_DICT[m]}
+                </MenuItem>
+              ))}
+              <Box sx={{ mb: 1 }} />
+            </Select>
+          </FormControl>
+        )}
+
         <Tooltip title="Vizualizar professores">
           <Checkbox
             icon={<PeopleOutlinedIcon />}
@@ -95,33 +170,38 @@ const Footer = ({
             onChange={(e) => setShowTeachers(e.target.checked)}
           />
         </Tooltip>
-        <Tooltip title="Recalcular">
-          <IconButton onClick={getData} variant="contained" fullWidth>
-            <ReplayIcon />
-          </IconButton>
-        </Tooltip>
-        {!!hasSelectedCells && (
-          <Tooltip title="Recalcula todo o horário, exceto as aulas selecionadas.">
+
+        {!createdAt && (
+          <>
+            <Tooltip title="Recalcular">
+              <IconButton onClick={getData} variant="contained" fullWidth>
+                <ReplayIcon />
+              </IconButton>
+            </Tooltip>
+            {!!hasSelectedCells && (
+              <Tooltip title="Recalcula todo o horário, exceto as aulas selecionadas.">
+                <Button
+                  onClick={fixedRecalculation}
+                  startIcon={<CalculateIcon />}
+                  variant="contained"
+                  color="secondary"
+                  sx={{ ml: 2 }}
+                >
+                  Recalculo Fixado
+                </Button>
+              </Tooltip>
+            )}
             <Button
-              onClick={fixedRecalculation}
-              startIcon={<CalculateIcon />}
+              onClick={saveSchedule}
+              startIcon={<BookmarkIcon />}
               variant="contained"
-              color="warning"
+              color="success"
               sx={{ ml: 2 }}
             >
-              Recalculo Fixado
+              Salvar
             </Button>
-          </Tooltip>
+          </>
         )}
-        <Button
-          // onClick={() => }
-          startIcon={<BookmarkIcon />}
-          variant="contained"
-          color="success"
-          sx={{ ml: 2 }}
-        >
-          Salvar
-        </Button>
       </Toolbar>
     </StyledAppBar>
   );

@@ -23,26 +23,26 @@ const StyledTableCell = styled(TableCell)(
   ({ theme, gray, selected, darkRow, draggable, hovered }) => ({
     textAlign: "center",
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.grey[900],
+      backgroundColor: "rgba(44, 59, 69, 0.9)",
       color: theme.palette.common.white,
-      borderColor: theme.palette.text.primary,
+      borderColor: "rgba(44, 59, 69, 1)",
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
       ...(gray
         ? {
-            backgroundColor: theme.palette.grey[900],
+            backgroundColor: "rgba(44, 59, 69, 0.9)",
             color: theme.palette.common.white,
-            borderColor: theme.palette.text.primary,
+            borderColor: "rgba(44, 59, 69, 1)",
             fontWeight: "bold",
           }
         : {}),
       ...(selected
         ? {
             backgroundColor: darkRow
-              ? "rgba(237, 108, 2, 0.55)"
-              : "rgba(237, 108, 2, 0.40)",
-            borderColor: "rgba(237, 108, 2, 0.30)",
+              ? "rgba(156, 39, 176, 0.55)"
+              : "rgba(156, 39, 176, 0.40)",
+            borderColor: "rgba(156, 39, 176, 0.30)",
           }
         : {}),
       ...(draggable
@@ -52,8 +52,8 @@ const StyledTableCell = styled(TableCell)(
             "&:hover": {
               backgroundColor: selected
                 ? darkRow
-                  ? "rgba(237, 108, 2, 0.65)"
-                  : "rgba(237, 108, 2, 0.5)"
+                  ? "rgba(156, 39, 176, 0.65)"
+                  : "rgba(156, 39, 176, 0.5)"
                 : "rgba(173, 216, 230, 0.7)",
               border: 0,
             },
@@ -85,6 +85,7 @@ const Schedule = ({
   setDraggedLesson,
   swapLessons,
   selectLesson,
+  fixed,
 }) => {
   const weekSchedule = {};
   const times = new Set();
@@ -194,7 +195,7 @@ const Schedule = ({
                     hoveredLesson.startingTime ===
                     weekSchedule[weekDay][time].startingTime
                   }
-                  draggable
+                  draggable={!fixed}
                   onDragStart={() =>
                     handleDragStart(
                       schedule.className,
@@ -216,7 +217,9 @@ const Schedule = ({
                       weekSchedule[weekDay][time]
                     )
                   }
-                  onClick={() => selectLesson(weekSchedule[weekDay][time])}
+                  onClick={() => {
+                    if (!fixed) selectLesson(weekSchedule[weekDay][time]);
+                  }}
                 >
                   {getLessonStr(weekSchedule[weekDay][time])}
                 </StyledTableCell>

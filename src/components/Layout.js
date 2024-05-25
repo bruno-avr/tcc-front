@@ -80,44 +80,50 @@ const routesData = [
     title: "Início",
     route: "/",
     Icon: HomeIcon,
+    hasContainer: true,
   },
   {
     title: "Horários",
     route: "/schedules",
     Icon: CalendarMonthIcon,
+    hasContainer: true,
   },
   {
     title: "Acesso de Horários",
     route: "/schedules/view",
+    hasContainer: true,
   },
   {
     title: "Gerar novo horário",
     route: "/schedules/generate",
-    noContainer: true,
   },
   {
     title: "Professores",
     route: "/teachers",
     Icon: PeopleIcon,
     hasAddButton: true,
+    hasContainer: true,
   },
   {
     title: "Séries",
     route: "/grades",
     Icon: SchoolIcon,
     hasAddButton: true,
+    hasContainer: true,
   },
   {
     title: "Turmas",
     route: "/classes",
     Icon: ClassIcon,
     hasAddButton: true,
+    hasContainer: true,
   },
   {
     title: "Disciplinas",
     route: "/subjects",
     Icon: SubjectIcon,
     hasAddButton: true,
+    hasContainer: true,
   },
 ];
 
@@ -158,6 +164,11 @@ export default function Layout({ children }) {
           >
             <MenuIcon />
           </IconButton>
+          {location.pathname.split("/").length > 2 && (
+            <IconButton sx={{ mr: 2 }} color="inherit" onClick={goBack}>
+              <ArrowBackIcon />
+            </IconButton>
+          )}
           <Typography
             component="h1"
             variant="h6"
@@ -168,15 +179,18 @@ export default function Layout({ children }) {
             {
               (
                 routesData.find((e) => e.route === location.pathname) ||
+                routesData.find(
+                  (e) =>
+                    e.route ===
+                    location.pathname.substring(
+                      0,
+                      location.pathname.lastIndexOf("/")
+                    )
+                ) ||
                 routesData[0]
               ).title
             }
           </Typography>
-          {location.pathname.split("/").length > 2 && (
-            <IconButton color="inherit" onClick={goBack}>
-              <ArrowBackIcon />
-            </IconButton>
-          )}
           {routesData.find((e) => e.route === location.pathname)
             ?.hasAddButton && (
             <IconButton color="inherit" onClick={openAddModal}>
@@ -247,12 +261,12 @@ export default function Layout({ children }) {
         }}
       >
         <Toolbar />
-        {routesData.find((e) => e.route === location.pathname)?.noContainer ? (
-          children
-        ) : (
+        {routesData.find((e) => e.route === location.pathname)?.hasContainer ? (
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             {children}
           </Container>
+        ) : (
+          children
         )}
       </Box>
       <ToastContainer
