@@ -96,7 +96,12 @@ const Generate = () => {
       setIsFeasible(response?.isFeasible || false);
       setScore(response?.score || 0);
       setSchedules(response?.schedules || []);
-      setSchedulesStr(JSON.stringify(response?.schedules || []));
+      console.log(response.schedules);
+
+      const duplicate = JSON.parse(JSON.stringify(response?.schedules || []));
+      duplicate.forEach((s) => s.lessons.forEach((l) => delete l.isSelected));
+      setSchedulesStr(JSON.stringify(duplicate));
+
       setChangesDetected(false);
     } catch (error) {
       toast.error(error.message);
