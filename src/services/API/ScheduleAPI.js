@@ -22,6 +22,15 @@ export default class ScheduleAPI {
     throw new Error(response.data.errors);
   }
 
+  async calculateScore(defaultSchedule) {
+    const response = await this.requester.post(
+      "/schedule/calculate-score",
+      defaultSchedule
+    );
+    if (response.status === 201) return response.data;
+    throw new Error(response.data.errors);
+  }
+
   async saveSchedule(data) {
     const response = await this.requester.post("/schedule/save", data);
     if (response.status === 201) return response.data;

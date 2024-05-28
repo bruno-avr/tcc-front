@@ -10,6 +10,7 @@ import {
   FormControl,
   IconButton,
   InputBase,
+  LinearProgress,
   ListSubheader,
   MenuItem,
   Select,
@@ -63,42 +64,14 @@ const Footer = ({
   createdAt,
   metaheuristic,
   setMetaheuristic,
-  hasManualChange,
+  loadingScore,
 }) => {
   function getStatus() {
-    if (hasManualChange)
+    if (loadingScore)
       return (
-        <Typography
-          textAlign="center"
-          variant="h6"
-          component="div"
-          color="warning.main"
-        >
-          Editado pelo próprio usuário
-        </Typography>
-      );
-    if (changesDetected)
-      return (
-        <>
-          <Tooltip title="Desfazer mudanças">
-            <IconButton
-              color="warning"
-              onClick={resetToDefault}
-              variant="contained"
-              fullWidth
-            >
-              <ReplayIcon />
-            </IconButton>
-          </Tooltip>
-          <Typography
-            textAlign="center"
-            variant="h6"
-            component="div"
-            color="warning.main"
-          >
-            Mudança detectada
-          </Typography>
-        </>
+        <Box sx={{ width: "280px" }} color="text.disabled">
+          <LinearProgress color="inherit" />
+        </Box>
       );
     return (
       <>
@@ -120,6 +93,18 @@ const Footer = ({
           >
             {` - Pontuação: ${score}`}
           </Typography>
+        )}
+        {!!changesDetected && (
+          <Tooltip title="Desfazer mudanças">
+            <IconButton
+              color="text.primary"
+              onClick={resetToDefault}
+              variant="contained"
+              fullWidth
+            >
+              <ReplayIcon />
+            </IconButton>
+          </Tooltip>
         )}
       </>
     );

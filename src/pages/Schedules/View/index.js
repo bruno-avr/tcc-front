@@ -12,6 +12,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
   styled,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -52,11 +53,6 @@ const View = () => {
   }, []);
 
   function getStatus(schedule) {
-    if (schedule.hasManualChange) {
-      return (
-        <Chip color="warning" label="Editado" sx={{ fontWeight: "bold" }} />
-      );
-    }
     if (schedule.isFeasible) {
       return (
         <Chip color="success" label="Factível" sx={{ fontWeight: "bold" }} />
@@ -69,53 +65,59 @@ const View = () => {
 
   return (
     <WaitLoading loading={loading}>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow
-              sx={{
-                backgroundColor: "rgba(44, 59, 69, 0.9)",
-              }}
-            >
-              <TableCell sx={{ color: "common.white" }} align="center">
-                Criado em
-              </TableCell>
-              <TableCell sx={{ color: "common.white" }} align="center">
-                Status
-              </TableCell>
-              <TableCell sx={{ color: "common.white" }} align="center">
-                Metaheurística
-              </TableCell>
-              <TableCell sx={{ color: "common.white" }} align="center">
-                Pontuação
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {schedules.map((schedule) => (
-              <StyledTableRow
-                key={schedule.id}
-                onClick={() => navigate(`/schedules/view/${schedule.id}`)}
+      {!schedules.length ? (
+        <Typography textAlign="center" variant="h5">
+          Nenhum horário cadastrado.
+        </Typography>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow
+                sx={{
+                  backgroundColor: "rgba(44, 59, 69, 0.9)",
+                }}
               >
-                <TableCell align="center">
-                  {formatDate(schedule.createdAt)}
+                <TableCell sx={{ color: "common.white" }} align="center">
+                  Criado em
                 </TableCell>
-                <TableCell align="center">{getStatus(schedule)}</TableCell>
-                <TableCell align="center">
-                  {schedule.metaheuristic
-                    ? METAHEURISTIC_DICT[schedule.metaheuristic]
-                    : "-"}
+                <TableCell sx={{ color: "common.white" }} align="center">
+                  Status
                 </TableCell>
-                <TableCell align="center">
-                  {!schedule.score && schedule.score !== 0
-                    ? "-"
-                    : schedule.score}
+                <TableCell sx={{ color: "common.white" }} align="center">
+                  Metaheurística
                 </TableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                <TableCell sx={{ color: "common.white" }} align="center">
+                  Pontuação
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {schedules.map((schedule) => (
+                <StyledTableRow
+                  key={schedule.id}
+                  onClick={() => navigate(`/schedules/view/${schedule.id}`)}
+                >
+                  <TableCell align="center">
+                    {formatDate(schedule.createdAt)}
+                  </TableCell>
+                  <TableCell align="center">{getStatus(schedule)}</TableCell>
+                  <TableCell align="center">
+                    {schedule.metaheuristic
+                      ? METAHEURISTIC_DICT[schedule.metaheuristic]
+                      : "-"}
+                  </TableCell>
+                  <TableCell align="center">
+                    {!schedule.score && schedule.score !== 0
+                      ? "-"
+                      : schedule.score}
+                  </TableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </WaitLoading>
   );
 };

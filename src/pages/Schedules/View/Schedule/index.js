@@ -16,7 +16,6 @@ const ViewSchedule = () => {
   const [isFeasible, setIsFeasible] = useState(false);
   const [score, setScore] = useState(0);
   const [showTeachers, setShowTeachers] = useState(false);
-  const [hasManualChange, setHasManualChange] = useState(false);
   const [createdAt, setCreatedAt] = useState(null);
   const [metaheuristic, setMetaheuristic] = useState(null);
 
@@ -26,7 +25,6 @@ const ViewSchedule = () => {
       const scheduleApi = new ScheduleAPI(requester);
       const response = await scheduleApi.getSchedule(id);
       console.log(response);
-      setHasManualChange(response?.hasManualChange || false);
       setIsFeasible(response?.isFeasible || false);
       setScore(response?.score || 0);
       setSchedules(response?.schedulesJSON || []);
@@ -59,7 +57,6 @@ const ViewSchedule = () => {
         score={score}
         setShowTeachers={setShowTeachers}
         getData={getData}
-        hasManualChange={hasManualChange}
         createdAt={createdAt}
         metaheuristic={metaheuristic}
       />

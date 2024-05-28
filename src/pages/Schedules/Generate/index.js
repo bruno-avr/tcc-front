@@ -15,12 +15,19 @@ const Generate = () => {
   const [isFeasible, setIsFeasible] = useState(false);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [loadingScore, setLoadingScore] = useState(false);
   const [showTeachers, setShowTeachers] = useState(false);
   const [draggedLesson, setDraggedLesson] = useState(null);
   const [changesDetected, setChangesDetected] = useState(false);
   const [metaheuristic, setMetaheuristic] = useState("simulatedAnnealing");
 
+  function checkLoadingScore() {
+    if (loadingScore) return true;
+    return false;
+  }
+
   async function saveSchedule() {
+    if (checkLoadingScore()) return;
     setLoading(true);
     try {
       const processedSchedules = schedules.map((schedule) => ({
@@ -33,12 +40,9 @@ const Generate = () => {
       const data = {
         metaheuristic,
         schedules: processedSchedules,
-        hasManualChange: !!changesDetected,
       };
-      if (!changesDetected) {
-        data.isFeasible = isFeasible;
-        if (isFeasible) data.score = score;
-      }
+      data.isFeasible = isFeasible;
+      if (isFeasible) data.score = score;
       const scheduleApi = new ScheduleAPI(requester);
       await scheduleApi.saveSchedule(data);
       toast.success("Horário salvo com sucesso.");
@@ -50,6 +54,7 @@ const Generate = () => {
   }
 
   async function getData() {
+    if (checkLoadingScore()) return;
     setShowTeachers(false);
     setLoading(true);
     try {
@@ -58,7 +63,7 @@ const Generate = () => {
       setIsFeasible(response?.isFeasible || false);
       setScore(response?.score || 0);
       setSchedules(response?.schedules || []);
-      setSchedulesStr(JSON.stringify(response?.schedules || []));
+      setSchedulesStr(JSON.stringify(response));
       setChangesDetected(false);
     } catch (error) {
       toast.error(error.message);
@@ -66,9 +71,9 @@ const Generate = () => {
     setLoading(false);
   }
 
-  async function fixedRecalculation() {
+  function processSchedule(schedulesAux, handleFixed) {
     const fixedSchedule = {};
-    schedules.forEach((schedule) => {
+    schedulesAux.forEach((schedule) => {
       fixedSchedule[schedule.classId] = {};
       schedule.lessons.forEach((lesson) => {
         fixedSchedule[schedule.classId][lesson.startingTime] = {};
@@ -82,16 +87,24 @@ const Generate = () => {
           fixedScheduleLesson.teacherId = "EMPTY";
         else fixedScheduleLesson.teacherId = lesson.teacher.id;
 
-        fixedScheduleLesson.isFixed = lesson.isSelected ? 1 : 0;
+        if (handleFixed) {
+          fixedScheduleLesson.isFixed = lesson.isSelected ? 1 : 0;
+        }
       });
     });
+    return fixedSchedule;
+  }
+
+  async function fixedRecalculation() {
+    if (checkLoadingScore()) return;
+    const processedSchedule = processSchedule(schedules, true);
     setShowTeachers(false);
     setLoading(true);
     try {
       const scheduleApi = new ScheduleAPI(requester);
       const response = await scheduleApi.fixedRecalculation(
         metaheuristic,
-        fixedSchedule
+        processedSchedule
       );
       setIsFeasible(response?.isFeasible || false);
       setScore(response?.score || 0);
@@ -100,7 +113,7 @@ const Generate = () => {
 
       const duplicate = JSON.parse(JSON.stringify(response?.schedules || []));
       duplicate.forEach((s) => s.lessons.forEach((l) => delete l.isSelected));
-      setSchedulesStr(JSON.stringify(duplicate));
+      setSchedulesStr(JSON.stringify({ ...response, schedules: duplicate }));
 
       setChangesDetected(false);
     } catch (error) {
@@ -109,11 +122,26 @@ const Generate = () => {
     setLoading(false);
   }
 
+  async function calculateScore(schedulesAux) {
+    const processedSchedule = processSchedule(schedulesAux);
+    setLoadingScore(true);
+    try {
+      const scheduleApi = new ScheduleAPI(requester);
+      const response = await scheduleApi.calculateScore(processedSchedule);
+      setIsFeasible(response?.isFeasible || false);
+      setScore(response?.score || 0);
+    } catch (error) {
+      toast.error(error.message);
+    }
+    setLoadingScore(false);
+  }
+
   useEffect(() => {
     getData();
   }, [metaheuristic]);
 
-  function swapLessons(index, lesson1, lesson2) {
+  async function swapLessons(index, lesson1, lesson2) {
+    if (checkLoadingScore()) return;
     setChangesDetected(true);
     const newSchedules = [...schedules];
     const lessons = newSchedules[index].lessons;
@@ -125,6 +153,7 @@ const Generate = () => {
     delete lessons[i].isSelected;
     delete lessons[j].isSelected;
     setSchedules(newSchedules);
+    await calculateScore(newSchedules);
   }
 
   function selectLesson(index, lesson) {
@@ -137,8 +166,17 @@ const Generate = () => {
   }
 
   function resetToDefault() {
-    setSchedules(JSON.parse(schedulesStr));
+    if (checkLoadingScore()) return;
+    const obj = JSON.parse(schedulesStr);
+    setIsFeasible(obj?.isFeasible || false);
+    setScore(obj?.score || 0);
+    setSchedules(obj?.schedules || []);
     setChangesDetected(false);
+  }
+
+  function changeMetaheuristic(aux) {
+    if (checkLoadingScore()) return;
+    setMetaheuristic(aux);
   }
 
   function hasSelectedCells() {
@@ -177,8 +215,9 @@ const Generate = () => {
         resetToDefault={resetToDefault}
         fixedRecalculation={fixedRecalculation}
         saveSchedule={saveSchedule}
-        setMetaheuristic={setMetaheuristic}
+        setMetaheuristic={changeMetaheuristic}
         metaheuristic={metaheuristic}
+        loadingScore={loadingScore}
       />
     </WaitLoading>
   );
