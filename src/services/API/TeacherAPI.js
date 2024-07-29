@@ -54,4 +54,10 @@ export default class TeacherAPI {
     if (response.status === 200) return response.data;
     throw new Error(response.data.errors);
   }
+
+  async deleteTeacher(id) {
+    const response = await this.requester.delete("/teacher/" + id);
+    if (response.status === 200) return response.data;
+    throw new Error(response.data.errors);
+  }
 }
