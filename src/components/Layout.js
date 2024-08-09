@@ -11,6 +11,7 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -25,6 +26,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import ClassIcon from "@mui/icons-material/Class";
 import SubjectIcon from "@mui/icons-material/Subject";
 import AddIcon from "@mui/icons-material/Add";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -103,6 +105,10 @@ const routesData = [
     Icon: PeopleIcon,
     hasAddButton: true,
     hasContainer: true,
+  },
+  {
+    title: "Prioridades dos professores",
+    route: "/teachers/priorities",
   },
   {
     title: "Séries",
@@ -191,11 +197,20 @@ export default function Layout({ children }) {
               ).title
             }
           </Typography>
+          {location.pathname === "/teachers" && (
+            <Tooltip title="Prioridades" arrow>
+              <IconButton color="inherit" onClick={() => navigate(`${location.pathname }/priorities`)}>
+                <BarChartIcon />
+              </IconButton>
+            </Tooltip>
+          )}
           {routesData.find((e) => e.route === location.pathname)
             ?.hasAddButton && (
-            <IconButton color="inherit" onClick={openAddModal}>
-              <AddIcon />
-            </IconButton>
+            <Tooltip title="Adicionar" arrow>
+              <IconButton color="inherit" onClick={openAddModal}>
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
           )}
         </Toolbar>
       </StyledAppBar>

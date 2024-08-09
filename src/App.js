@@ -17,6 +17,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import ViewSchedules from "./pages/Schedules/View";
 import ViewSchedule from "./pages/Schedules/View/Schedule";
 import GenerateSchedule from "./pages/Schedules/Generate";
+import Priorities from "./pages/Teachers/Priorities";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
                 element={<GenerateSchedule />}
               />
               <Route exact path="/schedules" element={<Schedules />} />
+              <Route exact path="/teachers/priorities" element={<Priorities />} />
               <Route exact path="/teachers" element={<Teachers />} />
               <Route exact path="/grades" element={<Grades />} />
               <Route exact path="/classes" element={<Classes />} />
