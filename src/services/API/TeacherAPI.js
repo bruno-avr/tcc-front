@@ -17,6 +17,12 @@ export default class TeacherAPI {
     throw new Error(response.data.errors);
   }
 
+  async savePriorities(priorities) {
+    const response = await this.requester.post("/teacher/priorities", priorities);
+    if (response.status === 201) return response.data;
+    throw new Error(response.data.errors);
+  }
+
   async addTeacher({ name, classes }) {
     const response = await this.requester.post("/teacher", {
       name,

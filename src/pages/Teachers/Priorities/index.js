@@ -1,14 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Box, IconButton } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { v4 as uuidv4 } from 'uuid';
 import Column from './Column';
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import TeacherAPI from '../../../services/API/TeacherAPI';
 import Requester from '../../../services/Requester/Requester';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Priorities() {
   const [columns, setColumns] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  function goBack() {
+    const aux = location.pathname.split("/");
+    aux.pop();
+    navigate(aux.join("/"));
+  }
 
   async function getData() {
     try {
@@ -16,8 +27,19 @@ function Priorities() {
       const response = await teacherApi.getPriorities();
       setColumns(response);
     } catch (error) {
-      console.log("error");
-      console.log(error);
+      toast.error(error.message);
+    }
+  }
+
+  async function savePriorities() {
+    try {
+      const teacherApi = new TeacherAPI(Requester);
+      await teacherApi.savePriorities(columns);
+      toast.success("As prioridades foram salvas com sucesso!");
+      goBack();
+
+    } catch (error) {
+      toast.error(error.message);
     }
   }
 
@@ -44,6 +66,15 @@ function Priorities() {
 
         const updatedStartColumnTeachers = startColumn.teachers.filter(teacher => teacher.id !== draggableId);
         const updatedEndColumnTeachers = [...endColumn.teachers, draggedTeacher];
+        updatedEndColumnTeachers.sort(function (a, b) {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        });
 
         setColumns(columns.map(col => {
           if (col.id === startColumn.id) {
@@ -119,6 +150,7 @@ function Priorities() {
               <Box
                 sx={{
                     marginTop: 1.2,
+                    paddingRight: 10
                 }}
               >
                 <IconButton
@@ -132,6 +164,22 @@ function Priorities() {
           )}
         </Droppable>
       </DragDropContext>
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: 24,
+          right: 24,
+        }}
+      >
+        <Button
+          onClick={savePriorities}
+          startIcon={<BookmarkIcon />}
+          variant="contained"
+          color="success"
+        >
+          Salvar
+        </Button>
+      </Box>
     </Box>
   );
 }
