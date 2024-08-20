@@ -32,7 +32,7 @@ export default function DeleteModal({
       await teacherApi.deleteTeacher(selectedTeacher.id);
       await getData();
       closeModal();
-      toast.success("Professor excluída com sucesso!");
+      toast.success("Professor excluído com sucesso!");
     } catch (error) {
       toast.error(error.message);
     }

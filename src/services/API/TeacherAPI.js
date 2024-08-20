@@ -23,7 +23,7 @@ export default class TeacherAPI {
     throw new Error(response.data.errors);
   }
 
-  async addTeacher({ name, classes }) {
+  async addTeacher({ name, classes, timeSlots }) {
     const response = await this.requester.post("/teacher", {
       name,
       subjectsPerClass: {
@@ -40,12 +40,15 @@ export default class TeacherAPI {
           },
         })),
       },
+      timeSlots: {
+        create: timeSlots,
+      },
     });
     if (response.status === 201) return response.data;
     throw new Error(response.data.errors);
   }
 
-  async editTeacher(id, { name, classes }) {
+  async editTeacher(id, { name, classes, timeSlots }) {
     const response = await this.requester.patch("/teacher/" + id, {
       name,
       subjectsPerClass: {
@@ -61,6 +64,10 @@ export default class TeacherAPI {
             },
           },
         })),
+      },
+      timeSlots: {
+        deleteMany: {},
+        create: timeSlots,
       },
     });
     if (response.status === 200) return response.data;

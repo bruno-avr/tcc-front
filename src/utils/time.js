@@ -18,6 +18,24 @@ export function numbersToWeeklySchedule(numbers) {
   return weekSchedule;
 }
 
+export function intervalsToWeeklySchedule(intervals) {
+  const weekSchedule = Array.from({ length: 7 }, () => []);
+
+  intervals?.forEach(({start, end, weekDay, id}) => {
+    const minutesInADay = 1440;
+    let dayOfWeek;
+    if (weekDay !== undefined) dayOfWeek = weekDay;
+    else dayOfWeek = (start - (start % minutesInADay)) / minutesInADay;
+    weekSchedule[dayOfWeek].push({
+      start: (start === null) ? null : start - dayOfWeek * minutesInADay,
+      end: (end === null) ? null : end - dayOfWeek * minutesInADay,
+      id
+    });
+  });
+
+  return weekSchedule;
+}
+
 export const daysOfWeekDict = [
   "Segunda-feira",
   "Terça-feira",

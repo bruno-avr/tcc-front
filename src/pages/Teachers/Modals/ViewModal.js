@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { daysOfWeekDict, intervalsToWeeklySchedule, numberToTime } from "../../../utils/time";
 
 export default function ViewModal({
   modalOpen,
@@ -35,6 +36,16 @@ export default function ViewModal({
     setSelectedTeacher(teacher);
     setModalOpen("delete");
   };
+
+  const Time = ({ start, end }) => (
+    <Paper
+      variant="outlined"
+      elevation={4}
+      sx={{ padding: "8px", textAlign: "center" }}
+    >
+      {`${numberToTime(start)} - ${numberToTime(end)}`}
+    </Paper>
+  );
 
   return (
     <Dialog open={modalOpen === "view"} onClose={closeModal} fullWidth>
@@ -95,8 +106,36 @@ export default function ViewModal({
             variant="h5"
             component="div"
           >
-            Nenhuma disciplina cadastrada.
+            Nenhuma disciplina cadastrada
           </Typography>
+        )}
+        <Divider sx={{ my: 2 }} />
+        <Typography textAlign="center" variant="h5" component="div">
+          Intervalos de preferência para as aulas
+        </Typography>
+        <Divider sx={{ my: 2 }} />
+        {intervalsToWeeklySchedule(selectedTeacher?.timeSlots).map(
+          (timeSlots, weekDay) => (
+            <Box key={weekDay}>
+              <Typography gutterBottom variant="h6" component="div">
+                {daysOfWeekDict[weekDay]}
+              </Typography>
+              {timeSlots.length ? (
+                <Grid container spacing={2}>
+                  {timeSlots.map((timeSlot) => (
+                    <Grid key={timeSlot} item xs={12} sm={6} md={4}>
+                      <Time start={timeSlot.start} end={timeSlot.end} />
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Typography gutterBottom variant="body2" component="div">
+                  Nenhum horário cadastrado.
+                </Typography>
+              )}
+              <Divider sx={{ my: 2 }} />
+            </Box>
+          )
         )}
       </DialogContent>
       <DialogActions>

@@ -26,6 +26,9 @@ export default function AddModal({ getData }) {
     try {
       if (!newTeacher?.name)
         throw new Error("Informe um nome para o professor.");
+      if (newTeacher.timeSlots.find(timeSlot => timeSlot.start === null || timeSlot.end === null)) {
+        throw new Error("Selecione todos os horários criados.");
+      }
       const teacherApi = new TeacherAPI(requester);
       await teacherApi.addTeacher(newTeacher);
       await getData();

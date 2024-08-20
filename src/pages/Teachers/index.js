@@ -40,7 +40,7 @@ export default function Teachers() {
 
   useEffect(() => {
     getData();
-  });
+  }, []);
 
   return (
     <Grid container spacing={3}>
