@@ -142,7 +142,7 @@ function Priorities() {
                       {...provided.dragHandleProps}
                       sx={{ flex: '0 0 250px' }}
                     >
-                      <Column column={column} index={index} removeColumn={removeColumn} />
+                      <Column numColumns={columns.length} column={column} index={index} removeColumn={removeColumn} />
                     </Box>
                   )}
                 </Draggable>

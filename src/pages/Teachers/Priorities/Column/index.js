@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import TeacherCard from '../TeacherCard';
 
-function Column({ column, removeColumn }) {
+function Column({ numColumns, column, removeColumn }) {
   return (
     <Droppable droppableId={String(column.id)} key={column.id}>
       {(provided, snapshot) => (
@@ -24,7 +24,7 @@ function Column({ column, removeColumn }) {
         >
           <Box sx={{ textAlign: 'center', marginBottom: 2 }}>
             <Typography variant="h6" component="div">
-              {column.priority ? `Prioridade ${column.priority}` : "Sem prioridade"}
+              {column.priority ? `Prioridade ${numColumns - column.priority}` : "Sem prioridade"}
             </Typography>
             <Box
                 sx={{
