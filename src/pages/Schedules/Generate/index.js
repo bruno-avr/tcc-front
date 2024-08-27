@@ -4,7 +4,7 @@ import WaitLoading from "../../../components/WaitLoading";
 import Footer from "./Footer";
 import { toast } from "react-toastify";
 import requester from "../../../services/Requester/Requester";
-import { Container } from "@mui/material";
+import { Box, Button, Container } from "@mui/material";
 import Schedule from "./Schedule";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +20,7 @@ const Generate = () => {
   const [draggedLesson, setDraggedLesson] = useState(null);
   const [changesDetected, setChangesDetected] = useState(false);
   const [metaheuristic, setMetaheuristic] = useState("simulatedAnnealing");
+  const [executionSpeed, setExecutionSpeed] = useState("fast");
 
   function checkLoadingScore() {
     if (loadingScore) return true;
@@ -59,7 +60,7 @@ const Generate = () => {
     setLoading(true);
     try {
       const scheduleApi = new ScheduleAPI(requester);
-      const response = await scheduleApi.generateSchedule(metaheuristic);
+      const response = await scheduleApi.generateSchedule(metaheuristic, executionSpeed);
       setIsFeasible(response?.isFeasible || false);
       setScore(response?.score || 0);
       setSchedules(response?.schedules || []);
@@ -179,6 +180,11 @@ const Generate = () => {
     setMetaheuristic(aux);
   }
 
+  function changeExecutionSpeed(aux) {
+    if (checkLoadingScore()) return;
+    setExecutionSpeed(aux);
+  }
+
   function hasSelectedCells() {
     if (
       schedules.find((schedule) =>
@@ -190,6 +196,7 @@ const Generate = () => {
   }
 
   return (
+    <>
     <WaitLoading loading={loading}>
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         {schedules.map((schedule, index) => (
@@ -216,10 +223,30 @@ const Generate = () => {
         fixedRecalculation={fixedRecalculation}
         saveSchedule={saveSchedule}
         setMetaheuristic={changeMetaheuristic}
+        executionSpeed={executionSpeed}
+        setExecutionSpeed={changeExecutionSpeed}
         metaheuristic={metaheuristic}
         loadingScore={loadingScore}
       />
     </WaitLoading>
+    {!!loading && executionSpeed !== "fast" && (
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Button
+          variant="text"
+          color="primary"
+          onClick={() => {
+            navigate("/schedules");
+          }}
+        >
+          Cancelar
+        </Button>
+      </Box>
+    )}
+    </>
   );
 };
 
