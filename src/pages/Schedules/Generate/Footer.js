@@ -22,7 +22,7 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ReplayIcon from "@mui/icons-material/Replay";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import { formatDate } from "../../../utils/time";
-import { METAHEURISTIC_DICT, EXECUTION_SPEEDS } from "../../../utils/constants";
+import { METAHEURISTIC_DICT, PERFORMANCE_MODES } from "../../../utils/constants";
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
@@ -64,8 +64,8 @@ const Footer = ({
   createdAt,
   metaheuristic,
   setMetaheuristic,
-  executionSpeed,
-  setExecutionSpeed,
+  performanceMode,
+  setPerformanceMode,
   loadingScore,
 }) => {
   function getStatus() {
@@ -134,18 +134,18 @@ const Footer = ({
           <>
           <FormControl sx={{ minWidth: 120, mr: 1 }} size="small">
             <Select
-              value={executionSpeed}
+              value={performanceMode}
               onChange={(e) => {
-                setExecutionSpeed(e.target.value);
+                setPerformanceMode(e.target.value);
               }}
               input={<BootstrapInput />}
             >
-              <ListSubheader sx={{ mb: 1 }}>Velocidade de execução</ListSubheader>
-              {Object.keys(EXECUTION_SPEEDS).map((m) => (
+              <ListSubheader sx={{ mb: 1 }}>Modo de desempenho</ListSubheader>
+              {Object.keys(PERFORMANCE_MODES).map((m) => (
                 <MenuItem key={m} value={m}>
-                  <Tooltip title={EXECUTION_SPEEDS[m].tooltip} placement="left">
+                  <Tooltip title={PERFORMANCE_MODES[m].tooltip} placement="left">
                     <Box sx={{ width: '100%' }}>
-                      {EXECUTION_SPEEDS[m].name}
+                      {PERFORMANCE_MODES[m].name}
                       </Box>
                   </Tooltip>
                 </MenuItem>

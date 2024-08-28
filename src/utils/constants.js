@@ -4,8 +4,8 @@ export const METAHEURISTIC_DICT = {
   simulatedAnnealing: "Simulated Annealing",
 };
 
-export const EXECUTION_SPEEDS = {
-  fast: {name: "Rápido", tooltip: "Instantâneo"},
-  medium: {name: "Médio", tooltip: "Alguns segundos"},
-  slow: {name: "Demorado", tooltip: "Alguns minutos"},
+export const PERFORMANCE_MODES = {
+  fast: {name: "Priorizar velocidade", tooltip: "Execução instantânea com pontuação moderada."},
+  balanced: {name: "Equilíbrio", tooltip: "Execução rápida com uma boa pontuação."},
+  precision: {name: "Priorizar pontuação", tooltip: "Execução mais lenta com uma pontuação elevada."},
 }

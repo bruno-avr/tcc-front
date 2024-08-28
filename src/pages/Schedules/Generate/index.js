@@ -20,7 +20,7 @@ const Generate = () => {
   const [draggedLesson, setDraggedLesson] = useState(null);
   const [changesDetected, setChangesDetected] = useState(false);
   const [metaheuristic, setMetaheuristic] = useState("simulatedAnnealing");
-  const [executionSpeed, setExecutionSpeed] = useState("fast");
+  const [performanceMode, setPerformanceMode] = useState("fast");
 
   function checkLoadingScore() {
     if (loadingScore) return true;
@@ -60,7 +60,7 @@ const Generate = () => {
     setLoading(true);
     try {
       const scheduleApi = new ScheduleAPI(requester);
-      const response = await scheduleApi.generateSchedule(metaheuristic, executionSpeed);
+      const response = await scheduleApi.generateSchedule(metaheuristic, performanceMode);
       setIsFeasible(response?.isFeasible || false);
       setScore(response?.score || 0);
       setSchedules(response?.schedules || []);
@@ -180,9 +180,9 @@ const Generate = () => {
     setMetaheuristic(aux);
   }
 
-  function changeExecutionSpeed(aux) {
+  function changePerformanceMode(aux) {
     if (checkLoadingScore()) return;
-    setExecutionSpeed(aux);
+    setPerformanceMode(aux);
   }
 
   function hasSelectedCells() {
@@ -223,13 +223,13 @@ const Generate = () => {
         fixedRecalculation={fixedRecalculation}
         saveSchedule={saveSchedule}
         setMetaheuristic={changeMetaheuristic}
-        executionSpeed={executionSpeed}
-        setExecutionSpeed={changeExecutionSpeed}
+        performanceMode={performanceMode}
+        setPerformanceMode={changePerformanceMode}
         metaheuristic={metaheuristic}
         loadingScore={loadingScore}
       />
     </WaitLoading>
-    {!!loading && executionSpeed !== "fast" && (
+    {!!loading && performanceMode !== "fast" && (
       <Box
         display="flex"
         alignItems="center"

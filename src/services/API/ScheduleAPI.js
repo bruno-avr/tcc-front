@@ -5,9 +5,9 @@ export default class ScheduleAPI {
     this.requester = requester;
   }
 
-  async generateSchedule(metaheuristic, executionSpeed) {
+  async generateSchedule(metaheuristic, performanceMode) {
     const response = await this.requester.post(
-      "/schedule/generate/" + metaheuristic, {executionSpeed}
+      "/schedule/generate/" + metaheuristic, {performanceMode}
     );
     if (response.status === 201) return response.data;
     throw new Error(response.data.errors);
