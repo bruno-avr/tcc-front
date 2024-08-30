@@ -117,8 +117,8 @@ function Priorities() {
         width: '100%',
         height: 'calc(100vh - 64px)',
         overflowX: 'auto',
-        paddingY: 7,
-        paddingX: 6,
+        paddingY: 4,
+        paddingX: 3,
       }}
     >
       <DragDropContext onDragEnd={handleDragEnd}>

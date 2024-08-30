@@ -26,6 +26,11 @@ function Column({ numColumns, column, removeColumn }) {
             <Typography variant="h6" component="div">
               {column.priority ? `Prioridade ${numColumns - column.priority}` : "Sem prioridade"}
             </Typography>
+            {numColumns - column.priority === 1 && (
+              <Typography variant="subtitle2" component="div">
+                (Maior Prioridade)
+              </Typography>
+            )}
             <Box
                 sx={{
                 position: 'absolute',
