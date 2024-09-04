@@ -13,10 +13,12 @@ export default class ScheduleAPI {
     throw new Error(response.data.errors);
   }
 
-  async fixedRecalculation(metaheuristic, defaultSchedule) {
+  async fixedRecalculation(metaheuristic, defaultSchedule, performanceMode) {
     const response = await this.requester.post(
-      "/schedule/fixed-recalculation/" + metaheuristic,
-      defaultSchedule
+      "/schedule/fixed-recalculation/" + metaheuristic, {
+        defaultSchedule,
+        performanceMode
+      }
     );
     if (response.status === 201) return response.data;
     throw new Error(response.data.errors);

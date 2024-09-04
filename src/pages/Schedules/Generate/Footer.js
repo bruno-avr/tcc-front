@@ -153,7 +153,7 @@ const Footer = ({
               <Box sx={{ mb: 1 }} />
             </Select>
           </FormControl>
-          <FormControl sx={{ minWidth: 120, mr: 1 }} size="small">
+          <FormControl sx={{ minWidth: 120, mr: 1, ...(hasSelectedCells ? {maxWidth: 120} : {}) }} size="small">
             <Select
               value={metaheuristic}
               onChange={(e) => {
@@ -197,7 +197,7 @@ const Footer = ({
                   color="secondary"
                   sx={{ ml: 2 }}
                 >
-                  Recalculo Fixado
+                  Recálculo Fixado
                 </Button>
               </Tooltip>
             )}

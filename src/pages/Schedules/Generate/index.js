@@ -105,7 +105,8 @@ const Generate = () => {
       const scheduleApi = new ScheduleAPI(requester);
       const response = await scheduleApi.fixedRecalculation(
         metaheuristic,
-        processedSchedule
+        processedSchedule,
+        performanceMode
       );
       setIsFeasible(response?.isFeasible || false);
       setScore(response?.score || 0);
